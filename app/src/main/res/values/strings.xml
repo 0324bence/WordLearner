@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name" translatable="false">WordLearner</string>
+    <string name="nav_error">Navigation error</string>
+</resources>
