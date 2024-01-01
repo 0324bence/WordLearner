@@ -33,11 +33,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportExport
 import hu.delibence.wordlearner.ui.routes.Learn
 import hu.delibence.wordlearner.ui.routes.WordList
@@ -84,16 +89,31 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                 }
             ) {
                 learnerViewModel.routes.forEach { entry ->
-                    composable(route = entry.key) {
-//                        Text(navController.currentDestination?.route ?: "No route")
-                        when (entry.key) {
-                            "learn" -> Learn()
-                            "wordlist" -> WordList()
-                            "importexport" -> ImportExport()
-                            else -> {
-                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                    Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
+                    if (entry.key != "wordlist") {
+                        composable(route = entry.key) {
+    //                        Text(navController.currentDestination?.route ?: "No route")
+                            when (entry.key) {
+                                "learn" -> Learn()
+                                "importexport" -> ImportExport()
+                                else -> {
+                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                        Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
+                                    }
                                 }
+                            }
+                        }
+                    } else {
+                        navigation(startDestination = "groups", route = "wordlist") {
+                            composable("groups") {
+                                GroupList(navController = navController)
+                            }
+                            composable(
+                                route = "words/{groupId}",
+                                arguments = listOf(
+                                    navArgument("groupId") {type = NavType.IntType}
+                                )
+                            ) {navBackStackEntry ->
+                                WordList(navController, navBackStackEntry.arguments?.getInt("groupId"))
                             }
                         }
                     }

@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.ui.theme.Green
+import hu.delibence.wordlearner.ui.theme.Red
 import kotlin.math.roundToInt
 
 @Composable
@@ -80,7 +82,7 @@ fun Learn() {
                 .background(
                     brush = Brush.horizontalGradient(
                         colors = listOf(
-                            Color(0x66E52626),
+                            Green,
                             Color.Transparent
                         )
                     )
@@ -217,7 +219,7 @@ fun Learn() {
                     brush = Brush.horizontalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            Color(0x666EE843)
+                            Red
 
                         )
                     )

@@ -3,4 +3,5 @@
     <string name="nav_error">Navigációs hiba</string>
     <string name="learn_no_words">Szólista üres</string>
     <string name="learn_show">Lefordított szó mutatása</string>
+    <string name="wordlist_groups">Csoportok</string>
 </resources>
