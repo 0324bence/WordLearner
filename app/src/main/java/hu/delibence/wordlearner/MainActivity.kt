@@ -1,5 +1,7 @@
 package hu.delibence.wordlearner
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,8 +26,10 @@ import hu.delibence.wordlearner.ui.MainScreen
 import hu.delibence.wordlearner.ui.theme.WordLearnerTheme
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
             WordLearnerTheme {
                 MainScreen()
