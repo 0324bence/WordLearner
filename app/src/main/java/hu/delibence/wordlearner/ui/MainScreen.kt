@@ -1,6 +1,12 @@
 package hu.delibence.wordlearner.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +15,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -44,7 +51,9 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
             NavigationBar(
-                modifier = Modifier.fillMaxWidth().zIndex(10f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .zIndex(10f),
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ) {
@@ -62,17 +71,23 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
         Surface(modifier = Modifier
             .padding(it)
             .fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            NavHost(navController, startDestination = learnerViewModel.baseRoute) {
+            NavHost(
+                navController,
+                startDestination = learnerViewModel.baseRoute,
+                enterTransition = {
+                    fadeIn(animationSpec = tween(200))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(200))
+                }
+            ) {
                 learnerViewModel.routes.forEach { entry ->
                     composable(route = entry.key) {
 //                        Text(navController.currentDestination?.route ?: "No route")
                         when (entry.key) {
                             "learn" -> Learn()
                             "wordlist" -> WordList()
-                            //"importexport" -> ImportExport()
-                            "importexport" -> {
-
-                            }
+                            "importexport" -> ImportExport()
                             else -> {
                                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                     Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
