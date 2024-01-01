@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,7 +44,7 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
             NavigationBar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().zIndex(10f),
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ) {
@@ -68,7 +69,10 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                         when (entry.key) {
                             "learn" -> Learn()
                             "wordlist" -> WordList()
-                            "importexport" -> ImportExport()
+                            //"importexport" -> ImportExport()
+                            "importexport" -> {
+
+                            }
                             else -> {
                                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                     Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
