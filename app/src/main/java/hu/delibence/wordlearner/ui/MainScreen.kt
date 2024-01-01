@@ -64,7 +64,7 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                         icon = { Icon(it.value.icon, contentDescription = it.value.label) },
                         label = { Text(it.value.label) },
                         selected = currentRoute == it.key,
-                        onClick = { navController.navigate(it.key) }
+                        onClick = { if (currentRoute != it.key) navController.navigate(it.key) }
                     )
                 }
             }
