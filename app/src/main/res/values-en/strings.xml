@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_error">Navigation error</string>
+    <string name="learn_no_words">No words in word list</string>
+    <string name="learn_show">Show word translation</string>
 </resources>
