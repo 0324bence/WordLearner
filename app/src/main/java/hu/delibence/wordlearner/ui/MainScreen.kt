@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -55,7 +56,8 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                     .fillMaxWidth()
                     .zIndex(10f),
                 containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                tonalElevation = 2f.dp
             ) {
                 learnerViewModel.routes.forEach {
                     NavigationBarItem(
