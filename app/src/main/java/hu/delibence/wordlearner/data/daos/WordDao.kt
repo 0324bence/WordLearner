@@ -8,13 +8,15 @@ import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.Word
 import kotlinx.coroutines.flow.Flow
 
+data class partialWord(val id: Int)
+
 @Dao
 interface WordDao {
     @Insert
     suspend fun Create(word: Word)
 
-    @Delete
-    suspend fun Delete(word: Word)
+    @Delete(entity = Word::class)
+    fun Delete(wordId: partialWord)
 
     @Query("Select * from words Order By word1 ASC")
     fun getAll(): Flow<List<Word>>

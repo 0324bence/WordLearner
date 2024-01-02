@@ -1,12 +1,13 @@
 package hu.delibence.wordlearner.data.repos
 
 import hu.delibence.wordlearner.data.daos.WordDao
+import hu.delibence.wordlearner.data.daos.partialWord
 import hu.delibence.wordlearner.data.entities.Word
 
 class WordRepository(private val wordDao: WordDao) {
     suspend fun CreateWord(word: Word) = wordDao.Create(word)
 
-    suspend fun DeleteWord(word: Word) = wordDao.Delete(word)
+    suspend fun DeleteWord(partialWord: partialWord) = wordDao.Delete(partialWord)
 
     fun GetAllWords() = wordDao.getAll()
 

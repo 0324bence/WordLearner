@@ -112,7 +112,12 @@ fun WordList(navController: NavController, groupId: Int?) {
                 actions = {
                     if (selectionMode) {
                         IconButton(onClick = {
-                            /*Todo*/
+                            wordList.forEachIndexed { i, v ->
+                                if (v) {
+                                    learnerViewModel.deleteWord(words.value[i].id)
+                                }
+                            }
+                            selectionMode = false
                         }) {
                             Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete selected")
                         }
@@ -146,6 +151,8 @@ fun WordList(navController: NavController, groupId: Int?) {
                                         if (!wordList.any { item ->  item }) selectionMode = false
                                     }
                                 )
+                            } else {
+                                Text(text = "[${wordItem.priority}]")
                             }
                         },
                         modifier = Modifier
@@ -153,7 +160,7 @@ fun WordList(navController: NavController, groupId: Int?) {
 //                            navController.navigate("words")
                                 if (selectionMode) {
                                     wordList[index] = !wordList[index]
-                                    if (!wordList.any { item ->  item }) selectionMode = false
+                                    if (!wordList.any { item -> item }) selectionMode = false
                                 } else {
                                     Log.d("Wordlist", "clicked")
                                 }

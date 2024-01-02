@@ -151,7 +151,7 @@ fun Learn() {
             ) {
                 if (currentWord == null) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-                        Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge)
+                        Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center)
                     }
                 } else {
                     Column(modifier = Modifier.fillMaxSize()) {
