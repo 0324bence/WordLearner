@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,22 +32,48 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.entities.Group
+import hu.delibence.wordlearner.data.entities.Word
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateWord(navController: NavController) {
+fun CreateWord(navController: NavController, groupId: Int?) {
+    if (groupId == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
+        }
+        return
+    }
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+
+    val groups = if (groupId == 0) {
+        mutableStateOf(listOf(Group(0, stringResource(id = R.string.all))))
+    } else {
+        learnerViewModel.getOneGroup(groupId).collectAsState(initial = listOf(Group(0, stringResource(id = R.string.loading))))
+    }
+
+    val group = groups.value.first()
+
     var lang1 by remember { mutableStateOf("") }
     var lang2 by remember { mutableStateOf("") }
 
@@ -55,7 +82,7 @@ fun CreateWord(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.add_word))
+                    Text(text = stringResource(id = R.string.add_word, group.name))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
@@ -133,7 +160,15 @@ fun CreateWord(navController: NavController) {
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = {
+                        val newGroup = if (group.id == 0) {
+                            null
+                        } else {
+                            group.id
+                        }
+                        learnerViewModel.createWord(Word(word1 = lang1, word2 = lang2, group = newGroup))
+                        navController.popBackStack()
+                    }) {
                         Text(text = stringResource(id = R.string.save))
                     }
                 }

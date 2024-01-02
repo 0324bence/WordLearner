@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,15 +30,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.entities.Group
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateGroup(navController: NavController) {
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+
     var groupName by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
@@ -72,7 +83,10 @@ fun CreateGroup(navController: NavController) {
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = {
+                        learnerViewModel.createGroup(Group(name = groupName))
+                        navController.popBackStack()
+                    }) {
                         Text(text = stringResource(id = R.string.save))
                     }
                 }

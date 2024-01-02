@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
@@ -32,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -50,13 +52,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import hu.delibence.wordlearner.ui.theme.Green
 import hu.delibence.wordlearner.ui.theme.Red
 import kotlin.math.roundToInt
 
 @Composable
 fun Learn() {
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+    var words = learnerViewModel.currentWord.collectAsState(initial = null)
+    val currentWord = words.value?.first()
     //Log.d("Debug Log", LocalContext.current.filesDir.path.toString())
     var wordRevealed by remember { mutableStateOf(false) }
 
@@ -68,6 +79,15 @@ fun Learn() {
 
     fun nextWord(known: Boolean) {
         Log.d("Debug Log", "Next word")
+        if (currentWord == null) return
+        if (known) {
+            learnerViewModel.updateWordPriority(currentWord.id, 10)
+        } else {
+            learnerViewModel.updateWordPriority(currentWord.id, 10 * -1)
+        }
+        cardOffsetX = 0f
+        cardRotation = 0f
+        wordRevealed = false
     }
 
     Row(
@@ -103,7 +123,9 @@ fun Learn() {
                         cardRotation = if (it > 0f) 3f else -3f
                     },
                     onDragStopped = {
-                        if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(false)
+                        if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(
+                            false
+                        )
                         cardOffsetX = 0f
                         cardRotation = 0f
                     }
@@ -127,81 +149,87 @@ fun Learn() {
                     )
                     .padding(10f.dp)
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.weight(weight = 9f, fill = true), verticalArrangement = Arrangement.spacedBy(5f.dp)) {
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(weight = 3f, fill = true), verticalArrangement = Arrangement.Center) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                                Text(/*"[${currentWord.priority}]"*/ "[]", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurface)
-                            }
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                                Text(
-                                    /*if (settings.langToLearn == LanguageToLearn.Lang1) currentWord.lang2 else currentWord.lang1,*/
-                                    "Alma",
-                                    style = MaterialTheme.typography.headlineLarge,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(weight = 1f, fill = true)) {
-                            Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center) {
-                                Box(modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(2f.dp)
-                                    .background(color = MaterialTheme.colorScheme.secondary)) {}
-                            }
-
-                        }
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(weight = 3f, fill = true), verticalArrangement = Arrangement.Center) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                                Text(
-                                    text = if (wordRevealed) "Apple" else "***",
-                                    style = MaterialTheme.typography.headlineLarge,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
+                if (currentWord == null) {
+                    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+                        Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge)
                     }
-                    Column(modifier = Modifier.weight(weight = 3f, fill = true), verticalArrangement = Arrangement.SpaceBetween) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                            Button(
-                                onClick = { wordRevealed = true },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    contentColor = MaterialTheme.colorScheme.primary
-                                ),
-                                elevation = ButtonDefaults.elevatedButtonElevation()
-                            ) {
-                                Text(text = stringResource(id = R.string.learn_show))
+                } else {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.weight(weight = 9f, fill = true), verticalArrangement = Arrangement.spacedBy(5f.dp)) {
+                            Column(modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(weight = 3f, fill = true), verticalArrangement = Arrangement.Center) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                    Text("[${currentWord.priority}]" , style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurface)
+                                }
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                    Text(
+                                        /*if (settings.langToLearn == LanguageToLearn.Lang1) currentWord.lang2 else currentWord.lang1,*/
+                                        currentWord.word1,
+                                        style = MaterialTheme.typography.headlineLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                            Column(modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(weight = 1f, fill = true)) {
+                                Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center) {
+                                    Box(modifier = Modifier
+                                        .fillMaxHeight()
+                                        .width(2f.dp)
+                                        .background(color = MaterialTheme.colorScheme.secondary)) {}
+                                }
+
+                            }
+                            Column(modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(weight = 3f, fill = true), verticalArrangement = Arrangement.Center) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                    Text(
+                                        text = if (wordRevealed) currentWord.word2 else "***",
+                                        style = MaterialTheme.typography.headlineLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            //Dont knowFAB
-                            FloatingActionButton(
-                                onClick = {
-                                    nextWord(false)
-                                },
-                                containerColor = Color(0xFF633B48),
-                                contentColor = MaterialTheme.colorScheme.tertiary
-                            ) {
-                                Icon(imageVector = Icons.Outlined.Close, contentDescription = "Delete fab button")
+                        Column(modifier = Modifier.weight(weight = 3f, fill = true), verticalArrangement = Arrangement.SpaceBetween) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                Button(
+                                    onClick = { wordRevealed = true },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.surface,
+                                        contentColor = MaterialTheme.colorScheme.primary
+                                    ),
+                                    elevation = ButtonDefaults.elevatedButtonElevation()
+                                ) {
+                                    Text(text = stringResource(id = R.string.learn_show))
+                                }
                             }
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(imageVector = Icons.Outlined.Flag, contentDescription = "Flag icon")
-                            }
-                            FloatingActionButton(
-                                onClick = { nextWord(true) },
-                                containerColor = Color(0xFF43633B),
-                                contentColor = MaterialTheme.colorScheme.tertiary
-                            ) {
-                                Icon(imageVector = Icons.Outlined.Check, contentDescription = "Delete fab button")
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                //Dont knowFAB
+                                FloatingActionButton(
+                                    onClick = {
+                                        nextWord(false)
+                                    },
+                                    containerColor = Color(0xFF633B48),
+                                    contentColor = MaterialTheme.colorScheme.tertiary
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.Close, contentDescription = "Delete fab button")
+                                }
+                                IconButton(onClick = { /*TODO*/ }) {
+                                    Icon(imageVector = Icons.Outlined.Flag, contentDescription = "Flag icon")
+                                }
+                                FloatingActionButton(
+                                    onClick = { nextWord(true) },
+                                    containerColor = Color(0xFF43633B),
+                                    contentColor = MaterialTheme.colorScheme.tertiary
+                                ) {
+                                    Icon(imageVector = Icons.Outlined.Check, contentDescription = "Delete fab button")
+                                }
                             }
                         }
                     }

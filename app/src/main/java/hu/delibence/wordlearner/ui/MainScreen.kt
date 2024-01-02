@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui
 
+import android.app.Application
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -28,10 +29,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
@@ -50,7 +53,12 @@ import hu.delibence.wordlearner.ui.routes.Learn
 import hu.delibence.wordlearner.ui.routes.WordList
 
 @Composable
-fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
+fun MainScreen() {
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+
     val navController = rememberNavController()
 //    val learnerUiState = learnerViewModel.uiState.collectAsState()
     Scaffold(
@@ -120,8 +128,13 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                             composable("creategroup") {
                                 CreateGroup(navController)
                             }
-                            composable("createword") {
-                                CreateWord(navController)
+                            composable(
+                                route = "createword/{groupId}",
+                                arguments = listOf(
+                                    navArgument("groupId") {type = NavType.IntType}
+                                )
+                            ) {navBackStackEntry ->
+                                CreateWord(navController, navBackStackEntry.arguments?.getInt("groupId"))
                             }
                         }
                     }

@@ -7,11 +7,13 @@
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
     <string name="save">Mentés</string>
-    <string name="add_word">Szó hozzáadása</string>
+    <string name="add_word">Szó hozzáadása a %1$s csoporthoz</string>
     <string name="lang1">Szó az első nyelven</string>
     <string name="lang2">Szó a második nyelven</string>
     <string name="group">Csoport</string>
     <string name="nav_learn">Tanulás</string>
     <string name="nav_wordlist">Szó lista</string>
     <string name="nav_importexport">Import/Export</string>
+    <string name="all">Összes</string>
+    <string name="loading">Betöltés</string>
 </resources>

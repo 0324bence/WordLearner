@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,30 +39,66 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.entities.Group
+import hu.delibence.wordlearner.data.entities.Word
 import hu.delibence.wordlearner.onTouchHeld
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
+import kotlinx.coroutines.flow.Flow
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+
+data class WordItem(
+    var checked: Boolean,
+    val word: Word
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordList(navController: NavController, groupId: Int?) {
-    if (groupId != null) {
+    if (groupId == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
         }
+        return
     }
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+
     var selectionMode by remember { mutableStateOf(false) }
-    var wordList = remember { mutableStateListOf(false, false, false, false, false) }
+    var wordList = remember { mutableStateListOf<Boolean>() }
+    //val wordList = mutableStateListOf<Boolean>()
+
+    val words = learnerViewModel.getWordsInGroup(groupId).collectAsState(initial = listOf())
+    if (words.value.size != wordList.size) {
+        if (wordList.size > 0) wordList.removeRange(0, wordList.size-1)
+        words.value.forEach {
+            wordList.add(false)
+        }
+    }
+
+    val groups = if (groupId == 0) {
+        mutableStateOf(listOf(Group(0, stringResource(id = R.string.all))))
+    } else {
+        learnerViewModel.getOneGroup(groupId).collectAsState(initial = listOf(Group(0, stringResource(id = R.string.loading))))
+    }
+
+    val group = groups.value.first()
+
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Group $groupId")
+                    Text(text = group.name)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
@@ -82,28 +121,29 @@ fun WordList(navController: NavController, groupId: Int?) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("createword") }) {
+            FloatingActionButton(onClick = { navController.navigate("createword/$groupId") }) {
                 Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
             }
         }
-    ) {
-        Surface(modifier = Modifier.padding(it)) {
+    ) { padding ->
+        Surface(modifier = Modifier.padding(padding)) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                itemsIndexed(wordList) { index, checked ->
+                itemsIndexed(words.value) { index, wordItem ->
 
                     ListItem(
-                        headlineContent = { Text(text = "Lang1 $index") },
-                        supportingContent = { Text(text = "Lang2") },
+                        headlineContent = { Text(text = wordItem.word1) },
+                        supportingContent = { Text(text = wordItem.word2) },
                         trailingContent = {
                             if (selectionMode) {
                                 Checkbox(
-                                    checked = checked,
+                                    checked = wordList[index],
                                     onCheckedChange = { state ->
+                                        Log.d("Wordlist", "checked")
                                         wordList[index] = state
-                                        if (!wordList.contains(true)) selectionMode = false
+                                        if (!wordList.any { item ->  item }) selectionMode = false
                                     }
                                 )
                             }
@@ -113,13 +153,14 @@ fun WordList(navController: NavController, groupId: Int?) {
 //                            navController.navigate("words")
                                 if (selectionMode) {
                                     wordList[index] = !wordList[index]
+                                    if (!wordList.any { item ->  item }) selectionMode = false
                                 } else {
                                     Log.d("Wordlist", "clicked")
                                 }
                             }
                             .onTouchHeld(500.milliseconds) { dur ->
                                 if (dur > 1.seconds && dur < 2.seconds) {
-                                    Log.d("Wordlist", "Held down")
+//                                    Log.d("Wordlist", "Held down")
                                     selectionMode = true
                                     wordList[index] = true
                                 }

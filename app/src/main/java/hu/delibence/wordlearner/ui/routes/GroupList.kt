@@ -1,10 +1,12 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.Add
@@ -27,22 +29,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hu.delibence.wordlearner.R
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.onTouchHeld
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupList(navController: NavController) {
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
+    
+    val groups = learnerViewModel.groups.collectAsState(initial = listOf())
+
     Scaffold(
         topBar = {
-
             TopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.wordlist_groups))
@@ -66,13 +79,24 @@ fun GroupList(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(5) { index ->
+                item {
                     ListItem(
-                        headlineContent = { Text(text = "Group name $index") },
-                        supportingContent = { Text(text = "10 words") },
+                        headlineContent = { Text(text = stringResource(id = R.string.all)) },
+                        supportingContent = { Text(text = "? words") },
                         trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = "Open")},
                         modifier = Modifier.clickable {
-                            navController.navigate("words/$index")
+                            navController.navigate("words/0")
+                        }
+                    )
+                    HorizontalDivider()
+                }
+                items(groups.value) { group ->
+                    ListItem(
+                        headlineContent = { Text(text = group.name) },
+                        supportingContent = { Text(text = "? words") },
+                        trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = "Open")},
+                        modifier = Modifier.clickable {
+                            navController.navigate("words/${group.id}")
                         }
                     )
                     HorizontalDivider()
@@ -117,11 +141,13 @@ fun Words(groupId: Int? = 0) {
         items(5) { index ->
             var held by remember { mutableStateOf(false) }
             ListItem(
-                modifier = Modifier.clickable {
-                    /*TODO*/
-                }.onTouchHeld(500.milliseconds) {
-                    if (it > 1.seconds) held = true
-                },
+                modifier = Modifier
+                    .clickable {
+                        /*TODO*/
+                    }
+                    .onTouchHeld(500.milliseconds) {
+                        if (it > 1.seconds) held = true
+                    },
                 headlineContent = { Text(text = "Lang1 $index $held") },
                 supportingContent = { Text(text = "Lang2") },
                 trailingContent = { Icon(imageVector = Icons.Outlined.ArrowRight, contentDescription = "Open")}
