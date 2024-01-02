@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -68,6 +69,13 @@ fun WordList(navController: NavController, groupId: Int?) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
                     }
+                },
+                actions = {
+                    if (selectionMode) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete selected")
+                        }
+                    }
                 }
             )
         },
@@ -101,6 +109,11 @@ fun WordList(navController: NavController, groupId: Int?) {
                         modifier = Modifier
                             .clickable {
 //                            navController.navigate("words")
+                                if (selectionMode) {
+                                    wordList[index] = !wordList[index]
+                                } else {
+                                    Log.d("Wordlist", "clicked")
+                                }
                             }
                             .onTouchHeld(500.milliseconds) { dur ->
                                 if (dur > 1.seconds && dur < 2.seconds) {
