@@ -4,4 +4,11 @@
     <string name="learn_no_words">No words in word list</string>
     <string name="learn_show">Show word translation</string>
     <string name="wordlist_groups">Groups</string>
+    <string name="create_group">Create group</string>
+    <string name="group_name">Group name</string>
+    <string name="save">Save</string>
+    <string name="add_word">Add word</string>
+    <string name="lang1">Word in first language</string>
+    <string name="lang2">Word in second language</string>
+    <string name="group">Group</string>
 </resources>

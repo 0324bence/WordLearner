@@ -42,6 +42,8 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.ui.routes.CreateGroup
+import hu.delibence.wordlearner.ui.routes.CreateWord
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportExport
 import hu.delibence.wordlearner.ui.routes.Learn
@@ -114,6 +116,12 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
                                 )
                             ) {navBackStackEntry ->
                                 WordList(navController, navBackStackEntry.arguments?.getInt("groupId"))
+                            }
+                            composable("creategroup") {
+                                CreateGroup(navController)
+                            }
+                            composable("createword") {
+                                CreateWord(navController)
                             }
                         }
                     }

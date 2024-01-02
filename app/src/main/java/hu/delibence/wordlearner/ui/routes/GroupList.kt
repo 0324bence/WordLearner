@@ -54,7 +54,9 @@ fun GroupList(navController: NavController) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = {
+                navController.navigate("creategroup")
+            }) {
                 Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
             }
         }

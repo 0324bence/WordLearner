@@ -72,7 +72,9 @@ fun WordList(navController: NavController, groupId: Int?) {
                 },
                 actions = {
                     if (selectionMode) {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = {
+                            /*Todo*/
+                        }) {
                             Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete selected")
                         }
                     }
@@ -80,7 +82,7 @@ fun WordList(navController: NavController, groupId: Int?) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { navController.navigate("createword") }) {
                 Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
             }
         }

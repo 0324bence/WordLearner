@@ -4,4 +4,11 @@
     <string name="learn_no_words">Szólista üres</string>
     <string name="learn_show">Lefordított szó mutatása</string>
     <string name="wordlist_groups">Csoportok</string>
+    <string name="create_group">Csoport létrehozása</string>
+    <string name="group_name">Csoport neve</string>
+    <string name="save">Mentés</string>
+    <string name="add_word">Szó hozzáadása</string>
+    <string name="lang1">Szó az első nyelven</string>
+    <string name="lang2">Szó a második nyelven</string>
+    <string name="group">Csoport</string>
 </resources>
