@@ -11,4 +11,7 @@
     <string name="lang1">Szó az első nyelven</string>
     <string name="lang2">Szó a második nyelven</string>
     <string name="group">Csoport</string>
+    <string name="nav_learn">Tanulás</string>
+    <string name="nav_wordlist">Szó lista</string>
+    <string name="nav_importexport">Import/Export</string>
 </resources>

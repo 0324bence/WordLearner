@@ -68,8 +68,8 @@ fun MainScreen(learnerViewModel: LearnerViewModel = viewModel()) {
             ) {
                 learnerViewModel.routes.forEach {
                     NavigationBarItem(
-                        icon = { Icon(it.value.icon, contentDescription = it.value.label) },
-                        label = { Text(it.value.label) },
+                        icon = { Icon(it.value.icon, contentDescription = stringResource(it.value.label)) },
+                        label = { Text(stringResource(it.value.label)) },
                         selected = currentRoute == it.key,
                         onClick = { if (currentRoute != it.key) navController.navigate(it.key) }
                     )
