@@ -82,7 +82,7 @@ fun Learn() {
                 .background(
                     brush = Brush.horizontalGradient(
                         colors = listOf(
-                            Green,
+                            Red,
                             Color.Transparent
                         )
                     )
@@ -219,7 +219,7 @@ fun Learn() {
                     brush = Brush.horizontalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            Red
+                            Green
 
                         )
                     )
