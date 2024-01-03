@@ -2,7 +2,9 @@ package hu.delibence.wordlearner.ui.routes
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -59,7 +61,7 @@ data class WordItem(
     val word: Word
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun WordList(navController: NavController, groupId: Int?) {
     if (groupId == null) {
@@ -156,22 +158,36 @@ fun WordList(navController: NavController, groupId: Int?) {
                             }
                         },
                         modifier = Modifier
-                            .clickable {
-//                            navController.navigate("words")
-                                if (selectionMode) {
-                                    wordList[index] = !wordList[index]
-                                    if (!wordList.any { item -> item }) selectionMode = false
-                                } else {
-                                    Log.d("Wordlist", "clicked")
-                                }
-                            }
-                            .onTouchHeld(500.milliseconds) { dur ->
-                                if (dur > 1.seconds && dur < 2.seconds) {
-//                                    Log.d("Wordlist", "Held down")
+//                            .clickable {
+////                            navController.navigate("words")
+//                                if (selectionMode) {
+//                                    wordList[index] = !wordList[index]
+//                                    if (!wordList.any { item -> item }) selectionMode = false
+//                                } else {
+//                                    Log.d("Wordlist", "clicked")
+//                                }
+//                            }
+//                            .onTouchHeld(500.milliseconds) { dur ->
+//                                if (dur > 1.seconds && dur < 2.seconds) {
+////                                    Log.d("Wordlist", "Held down")
+//                                    selectionMode = true
+//                                    wordList[index] = true
+//                                }
+//                            }
+                            .combinedClickable(
+                                onClick = {
+                                    if (selectionMode) {
+                                        wordList[index] = !wordList[index]
+                                        if (!wordList.any { item -> item }) selectionMode = false
+                                    } else {
+                                        Log.d("Wordlist", "clicked")
+                                    }
+                                },
+                                onLongClick = {
                                     selectionMode = true
                                     wordList[index] = true
                                 }
-                            }
+                            )
                     )
                     HorizontalDivider()
                 }
