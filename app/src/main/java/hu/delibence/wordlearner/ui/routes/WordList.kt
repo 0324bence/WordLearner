@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -114,6 +115,16 @@ fun WordList(navController: NavController, groupId: Int?) {
                 actions = {
                     if (selectionMode) {
                         IconButton(onClick = {
+                            if (false in wordList) {
+                                wordList.replaceAll { true }
+                            } else {
+                                wordList.replaceAll { false }
+                                selectionMode = false
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Outlined.SelectAll, contentDescription = "Select all")
+                        }
+                        IconButton(onClick = {
                             wordList.forEachIndexed { i, v ->
                                 if (v) {
                                     learnerViewModel.deleteWord(words.value[i].id)
@@ -128,8 +139,10 @@ fun WordList(navController: NavController, groupId: Int?) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("createword/$groupId") }) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
+            if (!selectionMode) {
+                FloatingActionButton(onClick = { navController.navigate("createword/$groupId") }) {
+                    Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
+                }
             }
         }
     ) { padding ->
