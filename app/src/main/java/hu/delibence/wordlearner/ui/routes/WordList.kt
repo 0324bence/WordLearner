@@ -83,7 +83,7 @@ fun WordList(navController: NavController, groupId: Int?) {
     val words = learnerViewModel.getWordsInGroup(groupId).collectAsState(initial = listOf())
     if (words.value.size != wordList.size) {
         if (wordList.size > 0) wordList.removeRange(0, wordList.size-1)
-        words.value.forEach {
+        words.value.forEach { _ ->
             wordList.add(false)
         }
     }
@@ -161,9 +161,8 @@ fun WordList(navController: NavController, groupId: Int?) {
                                 Checkbox(
                                     checked = wordList[index],
                                     onCheckedChange = { state ->
-                                        Log.d("Wordlist", "checked")
                                         wordList[index] = state
-                                        if (!wordList.any { item ->  item }) selectionMode = false
+                                        if (!wordList.contains(true)) selectionMode = false
                                     }
                                 )
                             } else {

@@ -8,7 +8,6 @@ import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.Word
 import kotlinx.coroutines.flow.Flow
 
-data class partialWord(val id: Int)
 
 @Dao
 interface WordDao {
@@ -37,3 +36,4 @@ interface WordDao {
     @Query("UPDATE words SET flagged = :value WHERE id = :wordId")
     fun flag(wordId: Int, value: Boolean)
 }
+data class partialWord(val id: Int)

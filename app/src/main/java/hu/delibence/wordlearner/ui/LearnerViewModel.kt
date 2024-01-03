@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.daos.partialGroup
 import hu.delibence.wordlearner.data.daos.partialWord
 import hu.delibence.wordlearner.data.databases.WordLearnerDatabase
 import hu.delibence.wordlearner.data.entities.Group
@@ -77,6 +78,12 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
     fun deleteWord(wordId: Int) {
         viewModelScope.launch (Dispatchers.IO) {
             wordRepository.DeleteWord(partialWord(wordId))
+        }
+    }
+
+    fun deleteGroup(groupId: Int) {
+        viewModelScope.launch (Dispatchers.IO) {
+            groupRepository.DeleteGroup(partialGroup(groupId))
         }
     }
 
