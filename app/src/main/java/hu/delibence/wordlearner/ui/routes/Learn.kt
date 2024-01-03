@@ -67,7 +67,11 @@ fun Learn() {
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
     var words = learnerViewModel.currentWord.collectAsState(initial = null)
-    val currentWord = words.value?.first()
+    val currentWord = if (words.value?.size == 0) {
+        null
+    } else {
+        words.value?.first()
+    }
     //Log.d("Debug Log", LocalContext.current.filesDir.path.toString())
     var wordRevealed by remember { mutableStateOf(false) }
 
@@ -109,51 +113,51 @@ fun Learn() {
                 )
                 .zIndex(5f)
         )
-        Card(
-            modifier = Modifier
-                .fillMaxHeight(0.9f)
-                .fillMaxWidth(0.8f)
-                .zIndex(4f)
-                .offset { IntOffset(cardOffsetXTransition.roundToInt(), 0) }
-                .rotate(cardRotationTransition)
-                .draggable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState {
-                        cardOffsetX += it
-                        cardRotation = if (it > 0f) 3f else -3f
-                    },
-                    onDragStopped = {
-                        if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(
-                            false
-                        )
-                        cardOffsetX = 0f
-                        cardRotation = 0f
-                    }
-                ),
-
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ),
-            elevation = CardDefaults.cardElevation(5f.dp)
-        ) {
-            Box(
+        if (currentWord == null) {
+            Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+                Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center)
+            }
+        } else {
+            Card(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = when {
-                            (cardOffsetX > 100f) -> Color(0x0D6EE843)
-                            (cardOffsetX < -100f) -> Color(0x0DE52626)
-                            else -> Color.Transparent
+                    .fillMaxHeight(0.9f)
+                    .fillMaxWidth(0.8f)
+                    .zIndex(4f)
+                    .offset { IntOffset(cardOffsetXTransition.roundToInt(), 0) }
+                    .rotate(cardRotationTransition)
+                    .draggable(
+                        orientation = Orientation.Horizontal,
+                        state = rememberDraggableState {
+                            cardOffsetX += it
+                            cardRotation = if (it > 0f) 3f else -3f
+                        },
+                        onDragStopped = {
+                            if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(
+                                false
+                            )
+                            cardOffsetX = 0f
+                            cardRotation = 0f
                         }
-                    )
-                    .padding(10f.dp)
+                    ),
+
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                ),
+                elevation = CardDefaults.cardElevation(5f.dp)
             ) {
-                if (currentWord == null) {
-                    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-                        Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center)
-                    }
-                } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = when {
+                                (cardOffsetX > 100f) -> Color(0x0D6EE843)
+                                (cardOffsetX < -100f) -> Color(0x0DE52626)
+                                else -> Color.Transparent
+                            }
+                        )
+                        .padding(10f.dp)
+                ) {
                     Column(modifier = Modifier.fillMaxSize()) {
                         Column(modifier = Modifier.weight(weight = 9f, fill = true), verticalArrangement = Arrangement.spacedBy(5f.dp)) {
                             Column(modifier = Modifier
@@ -236,9 +240,6 @@ fun Learn() {
                 }
             }
         }
-        /*Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-            Text(stringResource(id = R.string.learn_no_words), color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.headlineLarge)
-        }*/
         Box(
             modifier = Modifier
                 .fillMaxHeight()
