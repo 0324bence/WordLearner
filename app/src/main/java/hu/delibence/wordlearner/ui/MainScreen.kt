@@ -1,6 +1,7 @@
 package hu.delibence.wordlearner.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -66,6 +67,7 @@ fun MainScreen() {
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
+            val currentRouteParentRoute = navBackStackEntry?.destination?.parent?.route
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,8 +80,10 @@ fun MainScreen() {
                     NavigationBarItem(
                         icon = { Icon(it.value.icon, contentDescription = stringResource(it.value.label)) },
                         label = { Text(stringResource(it.value.label)) },
-                        selected = currentRoute == it.key,
-                        onClick = { if (currentRoute != it.key) navController.navigate(it.key) }
+                        selected = currentRoute == it.key || currentRouteParentRoute == it.key,
+                        onClick = {
+                            if (currentRoute != it.key && currentRouteParentRoute != it.key) navController.navigate(it.key)
+                        }
                     )
                 }
             }
