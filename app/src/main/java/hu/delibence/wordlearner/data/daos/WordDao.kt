@@ -17,6 +17,9 @@ interface WordDao {
     @Delete(entity = Word::class)
     fun Delete(wordId: partialWord)
 
+    @Query("Delete from words where `group` = :groupId")
+    suspend fun deleteAllInGroup(groupId: Int)
+
     @Query("Select * from words Order By word1 ASC")
     fun getAll(): Flow<List<Word>>
 

@@ -121,7 +121,7 @@ fun GroupList(navController: NavController) {
                             onClick = {
                                 groupList.slice(1..<groupList.size).forEachIndexed { i, v ->
                                     if (v) {
-                                        learnerViewModel.deleteWord(groups.value[i].id)
+                                        learnerViewModel.deleteGroup(groups.value[i].id)
                                     }
                                 }
                                 selectionMode = false

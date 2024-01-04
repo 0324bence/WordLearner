@@ -82,9 +82,16 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun deleteAllWordsInGroup(groupId: Int) {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.DeleteAllWordsInGroup(groupId)
+        }
+    }
+
     fun deleteGroup(groupId: Int) {
         viewModelScope.launch (Dispatchers.IO) {
             groupRepository.DeleteGroup(partialGroup(groupId))
+            wordRepository.DeleteAllWordsInGroup(groupId)
         }
     }
 

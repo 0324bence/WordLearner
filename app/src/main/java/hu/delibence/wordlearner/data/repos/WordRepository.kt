@@ -9,6 +9,8 @@ class WordRepository(private val wordDao: WordDao) {
 
     suspend fun DeleteWord(partialWord: partialWord) = wordDao.Delete(partialWord)
 
+    suspend fun DeleteAllWordsInGroup(groupId: Int) = wordDao.deleteAllInGroup(groupId)
+
     fun GetAllWords() = wordDao.getAll()
 
     fun GetAllInGroup(groupId: Int) = wordDao.getAllInGroup(groupId)
