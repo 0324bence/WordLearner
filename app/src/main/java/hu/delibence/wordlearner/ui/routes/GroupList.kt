@@ -70,6 +70,8 @@ fun GroupList(navController: NavController) {
     var groupList = remember { mutableStateListOf<Boolean>(false) }
     val groups = learnerViewModel.groups.collectAsState(initial = listOf())
 
+    val words = learnerViewModel.getWordsInGroup(0).collectAsState(initial = listOf())
+
     if ((groups.value.size + 1) != groupList.size) {
         if (groupList.size > 1) {
             groupList.removeRange(1, groupList.size-1)
@@ -150,7 +152,7 @@ fun GroupList(navController: NavController) {
                 item {
                     ListItem(
                         headlineContent = { Text(text = stringResource(id = R.string.all)) },
-                        supportingContent = { Text(text = "? words") },
+                        supportingContent = { Text(text = stringResource(id = R.string.groups_words, words.value.size)) },
                         trailingContent = {
                             if (selectionMode) {
                                 Checkbox(
@@ -183,7 +185,7 @@ fun GroupList(navController: NavController) {
                 itemsIndexed(groups.value) { index, group ->
                     ListItem(
                         headlineContent = { Text(text = group.name) },
-                        supportingContent = { Text(text = "? words") },
+                        supportingContent = { Text(text = stringResource(id = R.string.groups_words, group.words)) },
                         trailingContent = {
                             if (selectionMode) {
                                 Checkbox(

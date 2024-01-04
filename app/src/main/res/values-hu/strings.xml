@@ -16,4 +16,5 @@
     <string name="nav_importexport">Import/Export</string>
     <string name="all">Összes</string>
     <string name="loading">Betöltés</string>
+    <string name="groups_words">%1$d szó</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.daos.extendedGroup
 import hu.delibence.wordlearner.data.daos.partialGroup
 import hu.delibence.wordlearner.data.daos.partialWord
 import hu.delibence.wordlearner.data.databases.WordLearnerDatabase
@@ -48,7 +49,7 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
     private val groupRepository: GroupRepository
     private val wordRepository: WordRepository
 
-    val groups: Flow<List<Group>>
+    val groups: Flow<List<extendedGroup>>
 
     val currentWord: Flow<List<Word>>
 

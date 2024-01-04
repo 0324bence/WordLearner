@@ -16,11 +16,12 @@ interface GroupDao {
     @Delete(entity = Group::class)
     fun Delete(groupId: partialGroup)
 
-    @Query("Select * from groups Order By name ASC")
-    fun getAll(): Flow<List<Group>>
+    @Query("select groups.id as id, groups.name as name, COUNT((Select word1 from words where `group` = groups.id)) as words from groups group by groups.id")
+    fun getAll(): Flow<List<extendedGroup>>
 
     @Query("Select * from groups where id = :groupId  Order By name ASC")
     fun getSpecific(groupId: Int): Flow<List<Group>>
 }
 
 data class partialGroup(val id: Int)
+data class extendedGroup(val id: Int, val name: String, val words: Int)
