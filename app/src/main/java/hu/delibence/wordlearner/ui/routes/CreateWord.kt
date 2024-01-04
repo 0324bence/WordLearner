@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -39,8 +41,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,6 +83,8 @@ fun CreateWord(navController: NavController, groupId: Int?) {
     var lang2 by remember { mutableStateOf("") }
 
     var expanded by remember { mutableStateOf(false) }
+
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             TopAppBar(
@@ -105,13 +112,35 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                     value = lang1,
                     onValueChange = {lang1 = it},
                     label = { Text(text = stringResource(id = R.string.lang1)) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    )
                 )
                 OutlinedTextField(
                     value = lang2,
                     onValueChange = {lang2 = it},
                     label = { Text(text = stringResource(id = R.string.lang2)) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            val newGroup = if (group.id == 0) {
+                                null
+                            } else {
+                                group.id
+                            }
+                            learnerViewModel.createWord(Word(word1 = lang1, word2 = lang2, group = newGroup))
+                            navController.popBackStack()
+                        }
+                    )
                 )
                 /*Box(
                     modifier = Modifier
