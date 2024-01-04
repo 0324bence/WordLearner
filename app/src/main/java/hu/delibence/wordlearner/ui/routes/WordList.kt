@@ -139,7 +139,7 @@ fun WordList(navController: NavController, groupId: Int?) {
             )
         },
         floatingActionButton = {
-            if (!selectionMode) {
+            if (!selectionMode && groupId != 0) {
                 FloatingActionButton(onClick = { navController.navigate("createword/$groupId") }) {
                     Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add")
                 }

@@ -15,7 +15,7 @@ class WordRepository(private val wordDao: WordDao) {
 
     fun GetAllInGroup(groupId: Int) = wordDao.getAllInGroup(groupId)
 
-    fun GetByPriority(groupId: Int) = wordDao.getByPriority(groupId)
+    fun GetByPriority() = wordDao.getByPriority()
 
     fun GetAllByPriority() = wordDao.getAllByPriority()
 

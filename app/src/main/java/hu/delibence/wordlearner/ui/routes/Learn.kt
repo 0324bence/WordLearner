@@ -66,7 +66,7 @@ fun Learn() {
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
-    var words = learnerViewModel.currentWord.collectAsState(initial = null)
+    val words = learnerViewModel.currentWord.collectAsState(initial = null)
     val currentWord = if (words.value?.size == 0) {
         null
     } else {

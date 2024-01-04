@@ -14,7 +14,7 @@ interface GroupDao {
     suspend fun Create(group: Group)
 
     @Delete(entity = Group::class)
-    fun Delete(groupId: partialGroup)
+    suspend fun Delete(groupId: partialGroup)
 
     @Query("select groups.id as id, groups.name as name, (Select COUNT(*) from words where `group` = groups.id) as words from groups")
     fun getAll(): Flow<List<extendedGroup>>

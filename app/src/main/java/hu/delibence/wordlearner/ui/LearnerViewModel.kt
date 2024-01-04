@@ -1,14 +1,12 @@
 package hu.delibence.wordlearner.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.SyncAlt
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,15 +17,15 @@ import hu.delibence.wordlearner.data.daos.partialGroup
 import hu.delibence.wordlearner.data.daos.partialWord
 import hu.delibence.wordlearner.data.databases.WordLearnerDatabase
 import hu.delibence.wordlearner.data.entities.Group
+import hu.delibence.wordlearner.data.entities.SelectedGroup
 import hu.delibence.wordlearner.data.entities.Word
 import hu.delibence.wordlearner.data.repos.GroupRepository
+import hu.delibence.wordlearner.data.repos.SelectedGroupRepository
 import hu.delibence.wordlearner.data.repos.WordRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 data class Route(
@@ -48,20 +46,36 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
 
     private val groupRepository: GroupRepository
     private val wordRepository: WordRepository
+    private val selectedGroupRepository: SelectedGroupRepository
 
     val groups: Flow<List<extendedGroup>>
-
-    val currentWord: Flow<List<Word>>
+    val selectedGroups: Flow<List<SelectedGroup>>
+    var currentWord: Flow<List<Word>>
 
     init {
         val database = WordLearnerDatabase.getDatabase(application)
         val groupDao = database.groupDao()
         val wordDao = database.wordDao()
+        val selectedGroupDao = database.selectedGroupDao()
         groupRepository = GroupRepository(groupDao)
         wordRepository = WordRepository(wordDao)
+        selectedGroupRepository = SelectedGroupRepository(selectedGroupDao)
         groups = groupRepository.GetAllGroups()
+        selectedGroups = selectedGroupRepository.getGroups()
 
-        currentWord = getRandomWordByPriority(0)
+        currentWord = getRandomWordByPriority()
+    }
+
+    fun selectGroup(groupId: Int) {
+        viewModelScope.launch (Dispatchers.IO) {
+            selectedGroupRepository.addGroup(groupId)
+        }
+    }
+
+    fun deselectAllGroups() {
+        viewModelScope.launch (Dispatchers.IO) {
+            selectedGroupRepository.removeAll()
+        }
     }
 
     fun createGroup(group: Group) {
@@ -92,6 +106,7 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch (Dispatchers.IO) {
             groupRepository.DeleteGroup(partialGroup(groupId))
             wordRepository.DeleteAllWordsInGroup(groupId)
+            selectedGroupRepository.removeGroup(groupId)
         }
     }
 
@@ -106,11 +121,8 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         return groupRepository.getSpecificGroup(groupId)
     }
 
-    fun getRandomWordByPriority(groupId: Int): Flow<List<Word>> {
-        if (groupId == 0) {
-            return wordRepository.GetAllByPriority()
-        }
-        return wordRepository.GetByPriority(groupId)
+    private fun getRandomWordByPriority(): Flow<List<Word>> {
+        return wordRepository.GetByPriority()
     }
 
     fun updateWordPriority(wordId: Int, amount: Int) {

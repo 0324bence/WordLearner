@@ -15,7 +15,7 @@ interface WordDao {
     suspend fun Create(word: Word)
 
     @Delete(entity = Word::class)
-    fun Delete(wordId: partialWord)
+    suspend fun Delete(wordId: partialWord)
 
     @Query("Delete from words where `group` = :groupId")
     suspend fun deleteAllInGroup(groupId: Int)
@@ -26,11 +26,11 @@ interface WordDao {
     @Query("Select * from words where `group` = :groupId Order By word1 ASC")
     fun getAllInGroup(groupId: Int): Flow<List<Word>>
 
-    @Query("SELECT * FROM (SELECT * FROM words WHERE `group` = :groupId ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
-    fun getByPriority(groupId: Int): Flow<List<Word>>
+    @Query("SELECT * FROM (SELECT * FROM words join selectedwords on selectedwords.`group` = words.`group` ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
+    fun getByPriority(): Flow<List<Word>>
 
     //@Query("SELECT * FROM (SELECT * FROM word ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
-    @Query("SELECT * FROM (SELECT * FROM words ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
+    @Query("SELECT * FROM (SELECT * FROM words  ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
     fun getAllByPriority(): Flow<List<Word>>
 
     @Query("UPDATE words SET priority = (priority - :amount) WHERE id = :wordId")
