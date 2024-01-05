@@ -6,7 +6,10 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -159,16 +162,26 @@ fun WordList(navController: NavController, groupId: Int?) {
                         headlineContent = { Text(text = wordItem.word1) },
                         supportingContent = { Text(text = wordItem.word2) },
                         trailingContent = {
-                            if (selectionMode) {
-                                Checkbox(
-                                    checked = wordList[index],
-                                    onCheckedChange = { state ->
-                                        wordList[index] = state
-                                        if (!wordList.contains(true)) selectionMode = false
+                            Column(
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                if (selectionMode) {
+                                    Checkbox(
+                                        checked = wordList[index],
+                                        onCheckedChange = { state ->
+                                            wordList[index] = state
+                                            if (!wordList.contains(true)) selectionMode = false
+                                        }
+                                    )
+                                } else {
+                                    Text(text = "[${wordItem.priority}]")
+                                    if (groupId == 0) {
+                                        Text(text = wordItem.groupname)
                                     }
-                                )
-                            } else {
-                                Text(text = "[${wordItem.priority}]")
+                                }
+
                             }
                         },
                         modifier = Modifier

@@ -22,6 +22,9 @@ data class Word(
     @ColumnInfo(name = "flagged")
     val flagged: Boolean = false,
 
+    @ColumnInfo(name = "inplay")
+    val inplay: Boolean = true,
+
     @ColumnInfo(name = "group")
     val group: Int? = null
 )

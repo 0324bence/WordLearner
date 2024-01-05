@@ -15,8 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hu.delibence.wordlearner.R
 import hu.delibence.wordlearner.data.daos.extendedGroup
+import hu.delibence.wordlearner.data.daos.extendedWord
 import hu.delibence.wordlearner.data.daos.partialGroup
 import hu.delibence.wordlearner.data.daos.partialWord
+import hu.delibence.wordlearner.data.daos.wordCount
 import hu.delibence.wordlearner.data.databases.WordLearnerDatabase
 import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.SelectedGroup
@@ -54,6 +56,7 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
     val groups: Flow<List<extendedGroup>>
     val selectedGroups: Flow<List<SelectedGroup>>
     var currentWord: Flow<List<Word>>
+    val allWords: Flow<List<wordCount>>
 
     init {
         val database = WordLearnerDatabase.getDatabase(application)
@@ -65,8 +68,21 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         selectedGroupRepository = SelectedGroupRepository(selectedGroupDao)
         groups = groupRepository.GetAllGroups()
         selectedGroups = selectedGroupRepository.getGroups()
+        allWords = wordRepository.GetWordCount()
 
         currentWord = getRandomWordByPriority()
+    }
+
+    fun removeFromPlay(wordId: Int) {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.RemoveFromPlay(wordId)
+        }
+    }
+
+    fun restoreAllToPlay() {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.RestoreAllToPlay()
+        }
     }
 
     fun selectGroup(groupId: Int) {
@@ -113,7 +129,7 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun getWordsInGroup(groupId: Int): Flow<List<Word>> {
+    fun getWordsInGroup(groupId: Int): Flow<List<extendedWord>> {
         if (groupId == 0) {
             return wordRepository.GetAllWords()
         }

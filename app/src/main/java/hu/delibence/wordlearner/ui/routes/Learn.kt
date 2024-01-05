@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.daos.wordCount
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import hu.delibence.wordlearner.ui.theme.Green
@@ -78,6 +79,11 @@ fun Learn() {
     } else {
         words.value?.first()
     }
+
+    val _allWordCount = learnerViewModel.allWords.collectAsState(initial = listOf(wordCount(0, 0)))
+    val allWordCount = _allWordCount.value.first()
+//    val allWordCount = wordCount(0, 0)
+
     //Log.d("Debug Log", LocalContext.current.filesDir.path.toString())
     var wordRevealed by remember { mutableStateOf(false) }
 
@@ -87,17 +93,22 @@ fun Learn() {
     val cardOffsetXTransition by updateTransition(targetState = cardOffsetX, label = "").animateFloat(label = "") { it }
     val cardRotationTransition by updateTransition(targetState = cardRotation, label = "").animateFloat(label = "") { it }
 
-    fun nextWord(known: Boolean) {
+    fun nextWord(know: Boolean) {
         Log.d("Debug Log", "Next word")
         if (currentWord == null) return
-        if (known) {
+        if (know) {
             learnerViewModel.updateWordPriority(currentWord.id, 10)
+            learnerViewModel.removeFromPlay(currentWord.id)
         } else {
             learnerViewModel.updateWordPriority(currentWord.id, 10 * -1)
         }
         cardOffsetX = 0f
         cardRotation = 0f
         wordRevealed = false
+    }
+
+    if (allWordCount.all > 0 && allWordCount.inplay == 0) {
+        learnerViewModel.restoreAllToPlay()
     }
 
     Scaffold(
@@ -108,12 +119,14 @@ fun Learn() {
                     titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        learnerViewModel.restoreAllToPlay()
+                    }) {
                         Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
                     }
                 },
                 title = {
-                    Text(text = "Remaining: 10/10")
+                    Text(text = stringResource(id = R.string.learn_words, "${allWordCount.inplay}/${allWordCount.all}"))
                 }
             )
         }
@@ -155,12 +168,10 @@ fun Learn() {
                             orientation = Orientation.Horizontal,
                             state = rememberDraggableState {
                                 cardOffsetX += it
-                                cardRotation = if (it > 0.5f) 3f else if(it < -0.5f) -3f else 0f
+                                cardRotation = if (it > 0.5f) 3f else if (it < -0.5f) -3f else 0f
                             },
                             onDragStopped = {
-                                if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(
-                                    false
-                                )
+                                if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(false)
                                 cardOffsetX = 0f
                                 cardRotation = 0f
                             }
