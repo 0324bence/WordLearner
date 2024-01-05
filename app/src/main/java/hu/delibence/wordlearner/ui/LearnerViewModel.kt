@@ -7,6 +7,9 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SyncAlt
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.AndroidViewModel
@@ -49,6 +52,12 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
     )
     val baseRoute = "learn"
 
+    var darkmode by mutableStateOf(true)
+    var useSystemTheme by mutableStateOf(true)
+    var usePlaySet by mutableStateOf(true)
+    var positivePriorityMod by mutableStateOf("5")
+    var negativePriorityMod by mutableStateOf("1")
+
     private val groupRepository: GroupRepository
     private val wordRepository: WordRepository
     private val selectedGroupRepository: SelectedGroupRepository
@@ -71,6 +80,26 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         allWords = wordRepository.GetWordCount()
 
         currentWord = getRandomWordByPriority()
+    }
+
+    fun changeDarkMode(value: Boolean) {
+        darkmode = value
+    }
+
+    fun changeUseSystemTheme(value: Boolean) {
+        useSystemTheme = value
+    }
+
+    fun changeNegativePriorityMod(value: String) {
+        negativePriorityMod = value
+    }
+
+    fun changePositivePriorityMod(value: String) {
+        positivePriorityMod = value
+    }
+
+    fun changeUsePlaySet(value: Boolean) {
+        usePlaySet = value
     }
 
     fun removeFromPlay(wordId: Int) {
@@ -149,9 +178,6 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
             wordRepository.UpdatePriority(wordId, amount)
         }
     }
-//    fun ChangePath(newPath: String) {
-//        _uiState.value = LearnerUiState(currentPath = newPath)
-//    }
 }
 
 class LearnerViewModelFactory(

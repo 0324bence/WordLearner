@@ -69,28 +69,28 @@ fun GroupList(navController: NavController) {
     var selectionMode by remember { mutableStateOf(false) }
 
     val groupList = remember { mutableStateListOf<Boolean>(false) }
-    val groups = learnerViewModel.groups.collectAsState(initial = listOf())
+    val groups by learnerViewModel.groups.collectAsState(initial = listOf())
 
-    val words = learnerViewModel.getWordsInGroup(0).collectAsState(initial = listOf())
+    val words by learnerViewModel.getWordsInGroup(0).collectAsState(initial = listOf())
 
-    val selectedGroups = learnerViewModel.selectedGroups.collectAsState(initial = listOf())
+    val selectedGroups by learnerViewModel.selectedGroups.collectAsState(initial = listOf())
 
-    if ((groups.value.size + 1) != groupList.size) {
+    if ((groups.size + 1) != groupList.size) {
         if (groupList.size > 1) {
             groupList.removeRange(1, groupList.size-1)
             groupList.add(false)
         }
-        groups.value.forEach { _ ->
+        groups.forEach { _ ->
             groupList.add(false)
         }
     }
 
     val highlightGroups = mutableListOf<Int>()
-    if (selectedGroups.value.isNotEmpty()) {
-        if (selectedGroups.value.size == groups.value.size) {
+    if (selectedGroups.isNotEmpty()) {
+        if (selectedGroups.size == groups.size) {
             highlightGroups.add(0)
         } else {
-            selectedGroups.value.forEach {
+            selectedGroups.forEach {
                 highlightGroups.add(it.group)
             }
         }
@@ -121,13 +121,13 @@ fun GroupList(navController: NavController) {
                         IconButton(onClick = {
                             learnerViewModel.deselectAllGroups()
                             if (groupList[0]) {
-                                groups.value.forEach {
+                                groups.forEach {
                                     learnerViewModel.selectGroup(it.id)
                                 }
                             } else {
                                 groupList.slice(1..<groupList.size).forEachIndexed { index, v ->
                                     if (v) {
-                                        learnerViewModel.selectGroup(groups.value[index].id)
+                                        learnerViewModel.selectGroup(groups[index].id)
                                     }
                                 }
                             }
@@ -148,7 +148,7 @@ fun GroupList(navController: NavController) {
                             onClick = {
                                 groupList.slice(1..<groupList.size).forEachIndexed { i, v ->
                                     if (v) {
-                                        learnerViewModel.deleteGroup(groups.value[i].id)
+                                        learnerViewModel.deleteGroup(groups[i].id)
                                     }
                                 }
                                 selectionMode = false
@@ -185,7 +185,7 @@ fun GroupList(navController: NavController) {
                                 textDecoration = if (highlightGroups.contains(0)) TextDecoration.Underline else TextDecoration.None
                             )
                         },
-                        supportingContent = { Text(text = stringResource(id = R.string.groups_words, words.value.size)) },
+                        supportingContent = { Text(text = stringResource(id = R.string.groups_words, words.size)) },
                         trailingContent = {
                             if (selectionMode) {
                                 Checkbox(
@@ -216,7 +216,7 @@ fun GroupList(navController: NavController) {
                     )
                     HorizontalDivider()
                 }
-                itemsIndexed(groups.value) { index, group ->
+                itemsIndexed(groups) { index, group ->
                     ListItem(
                         tonalElevation = if (highlightGroups.contains(group.id)) 1.dp else 0.dp,
                         headlineContent = {

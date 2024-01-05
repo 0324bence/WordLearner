@@ -85,21 +85,21 @@ fun WordList(navController: NavController, groupId: Int?) {
     var wordList = remember { mutableStateListOf<Boolean>() }
     //val wordList = mutableStateListOf<Boolean>()
 
-    val words = learnerViewModel.getWordsInGroup(groupId).collectAsState(initial = listOf())
-    if (words.value.size != wordList.size) {
+    val words by learnerViewModel.getWordsInGroup(groupId).collectAsState(initial = listOf())
+    if (words.size != wordList.size) {
         if (wordList.size > 0) wordList.removeRange(0, wordList.size-1)
-        words.value.forEach { _ ->
+        words.forEach { _ ->
             wordList.add(false)
         }
     }
 
-    val groups = if (groupId == 0) {
+    val groups by if (groupId == 0) {
         mutableStateOf(listOf(Group(0, stringResource(id = R.string.all))))
     } else {
         learnerViewModel.getOneGroup(groupId).collectAsState(initial = listOf(Group(0, stringResource(id = R.string.loading))))
     }
 
-    val group = groups.value.first()
+    val group = groups.first()
 
 
     Scaffold(
@@ -132,7 +132,7 @@ fun WordList(navController: NavController, groupId: Int?) {
                         IconButton(onClick = {
                             wordList.forEachIndexed { i, v ->
                                 if (v) {
-                                    learnerViewModel.deleteWord(words.value[i].id)
+                                    learnerViewModel.deleteWord(words[i].id)
                                 }
                             }
                             selectionMode = false
@@ -156,7 +156,7 @@ fun WordList(navController: NavController, groupId: Int?) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                itemsIndexed(words.value) { index, wordItem ->
+                itemsIndexed(words) { index, wordItem ->
 
                     ListItem(
                         headlineContent = { Text(text = wordItem.word1) },

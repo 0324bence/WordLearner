@@ -73,13 +73,13 @@ fun CreateWord(navController: NavController, groupId: Int?) {
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
 
-    val groups = if (groupId == 0) {
+    val groups by if (groupId == 0) {
         mutableStateOf(listOf(Group(0, stringResource(id = R.string.all))))
     } else {
         learnerViewModel.getOneGroup(groupId).collectAsState(initial = listOf(Group(0, stringResource(id = R.string.loading))))
     }
 
-    val group = groups.value.first()
+    val group = groups.first()
 
     var lang1 by remember { mutableStateOf("") }
     var lang2 by remember { mutableStateOf("") }
@@ -122,7 +122,8 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                         onNext = {
                             focusManager.moveFocus(FocusDirection.Down)
                         }
-                    )
+                    ),
+                    singleLine = true
                 )
                 OutlinedTextField(
                     value = lang2,
@@ -142,7 +143,8 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                             learnerViewModel.createWord(Word(word1 = lang1, word2 = lang2, group = newGroup))
                             navController.popBackStack()
                         }
-                    )
+                    ),
+                    singleLine = true
                 )
                 /*Box(
                     modifier = Modifier

@@ -89,7 +89,8 @@ fun CreateGroup(navController: NavController) {
                             learnerViewModel.createGroup(Group(name = groupName))
                             navController.popBackStack()
                         }
-                    )
+                    ),
+                    singleLine = true
                 )
                 Row(
                     horizontalArrangement = Arrangement.End,

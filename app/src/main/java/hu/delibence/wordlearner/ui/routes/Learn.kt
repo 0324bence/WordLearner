@@ -73,15 +73,16 @@ fun Learn() {
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
-    val words = learnerViewModel.currentWord.collectAsState(initial = null)
-    val currentWord = if (words.value?.size == 0) {
+    val words by learnerViewModel.currentWord.collectAsState(initial = null)
+//    val currentWord = if (words?.size == 0) {
+    val currentWord = if (words?.size == 0) {
         null
     } else {
-        words.value?.first()
+        words?.first()
     }
 
-    val _allWordCount = learnerViewModel.allWords.collectAsState(initial = listOf(wordCount(0, 0)))
-    val allWordCount = _allWordCount.value.first()
+    val _allWordCount by learnerViewModel.allWords.collectAsState(initial = listOf(wordCount(0, 0)))
+    val allWordCount = _allWordCount.first()
 //    val allWordCount = wordCount(0, 0)
 
     //Log.d("Debug Log", LocalContext.current.filesDir.path.toString())

@@ -19,4 +19,10 @@
     <string name="groups_words">%1$d szó</string>
     <string name="settings">Beállítások</string>
     <string name="learn_words">Szavak a pakliban: %1$s</string>
+    <string name="darkmode">Sötét téma</string>
+    <string name="system_theme">Rendszertéma használata</string>
+    <string name="positive_priority">Prioritás változás tudott szó esetében (-)</string>
+    <string name="negative_priority">Prioritás változás nem tudott szó esetében (+)</string>
+    <string name="use_deck">Pakli rendszer használata</string>
+    <string name="deck_info">Tudott szavak eltávolítása a pakliból, újratöltésig</string>
 </resources>
