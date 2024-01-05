@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,7 @@ import hu.delibence.wordlearner.data.entities.Word
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateWord(navController: NavController, groupId: Int?) {

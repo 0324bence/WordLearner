@@ -1,5 +1,6 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -62,6 +63,7 @@ data class WordItem(
     val word: Word
 )
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun WordList(navController: NavController, groupId: Int?) {
