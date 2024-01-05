@@ -51,6 +51,7 @@ import hu.delibence.wordlearner.ui.routes.CreateWord
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportExport
 import hu.delibence.wordlearner.ui.routes.Learn
+import hu.delibence.wordlearner.ui.routes.Settings
 import hu.delibence.wordlearner.ui.routes.WordList
 
 @Composable
@@ -109,6 +110,7 @@ fun MainScreen() {
                             when (entry.key) {
                                 "learn" -> Learn()
                                 "importexport" -> ImportExport()
+                                "settings" -> Settings()
                                 else -> {
                                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                         Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)

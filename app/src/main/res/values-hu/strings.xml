@@ -17,4 +17,6 @@
     <string name="all">Összes</string>
     <string name="loading">Betöltés</string>
     <string name="groups_words">%1$d szó</string>
+    <string name="settings">Beállítások</string>
+    <string name="learn_words">Szavak a pakliban: %1$d</string>
 </resources>
