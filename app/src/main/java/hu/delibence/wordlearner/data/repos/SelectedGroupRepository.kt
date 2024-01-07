@@ -6,6 +6,8 @@ import hu.delibence.wordlearner.data.entities.SelectedGroup
 class SelectedGroupRepository(private val selectedGroupDao: SelectedGroupDao) {
     suspend fun addGroup(groupId: Int) = selectedGroupDao.Insert(SelectedGroup(group = groupId))
 
+    suspend fun addAllGroups(groupIds: List<Int>) = selectedGroupDao.InsertAll(groupIds.map { SelectedGroup(group = it) })
+
     suspend fun removeGroup(groupId: Int) = selectedGroupDao.RemoveGroup(groupId)
 
     suspend fun removeAll() = selectedGroupDao.RemoveAll()

@@ -19,8 +19,8 @@ interface GroupDao {
     @Query("select groups.id as id, groups.name as name, (Select COUNT(*) from words where `group` = groups.id) as words from groups")
     fun getAll(): Flow<List<extendedGroup>>
 
-    @Query("Select * from groups where id = :groupId  Order By name ASC")
-    fun getSpecific(groupId: Int): Flow<List<Group>>
+    @Query("Select * from groups where id = :groupId  Order By name ASC Limit 1")
+    fun getSpecific(groupId: Int): Flow<Group>
 }
 
 data class partialGroup(val id: Int)

@@ -13,5 +13,5 @@ class GroupRepository(private val groupDao: GroupDao) {
 
     fun GetAllGroups(): Flow<List<extendedGroup>> = groupDao.getAll()
 
-    fun getSpecificGroup(groupId: Int) = groupDao.getSpecific(groupId)
+    fun getSpecificGroup(groupId: Int): Flow<Group> = groupDao.getSpecific(groupId)
 }

@@ -64,8 +64,8 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
 
     val groups: Flow<List<extendedGroup>>
     val selectedGroups: Flow<List<SelectedGroup>>
-    var currentWord: Flow<List<Word>>
-    val allWords: Flow<List<wordCount>>
+    var currentWord: Flow<Word>
+    val allWords: Flow<wordCount>
 
     init {
         val database = WordLearnerDatabase.getDatabase(application)
@@ -120,6 +120,12 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun selectAllGroups(groupIds: List<Int>) {
+        viewModelScope.launch (Dispatchers.IO) {
+            selectedGroupRepository.addAllGroups(groupIds)
+        }
+    }
+
     fun deselectAllGroups() {
         viewModelScope.launch (Dispatchers.IO) {
             selectedGroupRepository.removeAll()
@@ -140,9 +146,10 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteWord(wordId: Int) {
         viewModelScope.launch (Dispatchers.IO) {
-            wordRepository.DeleteWord(partialWord(wordId))
+            wordRepository.DeleteWord(wordId)
         }
     }
+
 
     fun deleteAllWordsInGroup(groupId: Int) {
         viewModelScope.launch (Dispatchers.IO) {
@@ -165,11 +172,11 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         return wordRepository.GetAllInGroup(groupId)
     }
 
-    fun getOneGroup(groupId: Int): Flow<List<Group>> {
+    fun getOneGroup(groupId: Int): Flow<Group> {
         return groupRepository.getSpecificGroup(groupId)
     }
 
-    private fun getRandomWordByPriority(): Flow<List<Word>> {
+    private fun getRandomWordByPriority(): Flow<Word> {
         return wordRepository.GetByPriority()
     }
 

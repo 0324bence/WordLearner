@@ -49,9 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -73,16 +71,11 @@ fun Learn() {
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
-    val words by learnerViewModel.currentWord.collectAsState(initial = null)
-//    val currentWord = if (words?.size == 0) {
-    val currentWord = if (words?.size == 0) {
-        null
-    } else {
-        words?.first()
-    }
+    val databseWord by learnerViewModel.currentWord.collectAsState(initial = null)
+    val currentWord = databseWord
 
-    val _allWordCount by learnerViewModel.allWords.collectAsState(initial = listOf(wordCount(0, 0)))
-    val allWordCount = _allWordCount.first()
+    val databaseWordCount by learnerViewModel.allWords.collectAsState(initial = wordCount(0, 0))
+    val allWordCount = databaseWordCount
 //    val allWordCount = wordCount(0, 0)
 
     //Log.d("Debug Log", LocalContext.current.filesDir.path.toString())

@@ -73,13 +73,12 @@ fun CreateWord(navController: NavController, groupId: Int?) {
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
 
-    val groups by if (groupId == 0) {
-        mutableStateOf(listOf(Group(0, stringResource(id = R.string.all))))
+    val group by if (groupId == 0) {
+        mutableStateOf(Group(0, stringResource(id = R.string.all)))
     } else {
-        learnerViewModel.getOneGroup(groupId).collectAsState(initial = listOf(Group(0, stringResource(id = R.string.loading))))
+        learnerViewModel.getOneGroup(groupId).collectAsState(initial = Group(0, stringResource(id = R.string.loading)))
     }
 
-    val group = groups.first()
 
     var lang1 by remember { mutableStateOf("") }
     var lang2 by remember { mutableStateOf("") }

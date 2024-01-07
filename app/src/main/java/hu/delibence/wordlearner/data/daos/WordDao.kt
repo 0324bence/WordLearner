@@ -17,24 +17,25 @@ interface WordDao {
     @Delete(entity = Word::class)
     suspend fun Delete(wordId: partialWord)
 
+
     @Query("Delete from words where `group` = :groupId")
     suspend fun deleteAllInGroup(groupId: Int)
 
-    @Query("Select *, groups.name as groupname from words join groups on words.`group` = groups.id Order By word1 ASC")
+    @Query("Select words.*, groups.name as groupname from words join groups on words.`group` = groups.id Order By word1 ASC")
     fun getAll(): Flow<List<extendedWord>>
 
-    @Query("Select *, groups.name as groupname from words join groups on words.`group` = groups.id where `group` = :groupId Order By word1 ASC")
+    @Query("Select words.*, groups.name as groupname from words join groups on words.`group` = groups.id where `group` = :groupId Order By word1 ASC")
     fun getAllInGroup(groupId: Int): Flow<List<extendedWord>>
 
     @Query("SELECT * FROM (SELECT * FROM words join selectedwords on selectedwords.`group` = words.`group` where inplay = 1 ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
-    fun getByPriority(): Flow<List<Word>>
+    fun getByPriority(): Flow<Word>
 
     //@Query("SELECT * FROM (SELECT * FROM word ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
     @Query("SELECT * FROM (SELECT * FROM words where inplay = 1 ORDER BY priority  DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
-    fun getAllByPriority(): Flow<List<Word>>
+    fun getAllByPriority(): Flow<Word>
 
     @Query("Select COUNT(case inplay when 1 then 1 else null end) as inplay, COUNT(*) as `all` from words join selectedwords on selectedwords.`group` = words.`group`")
-    fun getWordCount(): Flow<List<wordCount>>
+    fun getWordCount(): Flow<wordCount>
 
     @Query("Update words set inplay = 0 where id = :wordId")
     suspend fun removeFromPlay(wordId: Int)

@@ -121,15 +121,15 @@ fun GroupList(navController: NavController) {
                         IconButton(onClick = {
                             learnerViewModel.deselectAllGroups()
                             if (groupList[0]) {
-                                groups.forEach {
-                                    learnerViewModel.selectGroup(it.id)
-                                }
+                                learnerViewModel.selectAllGroups(groups.map { it.id })
                             } else {
+                                val groupIds = mutableListOf<Int>()
                                 groupList.slice(1..<groupList.size).forEachIndexed { index, v ->
                                     if (v) {
-                                        learnerViewModel.selectGroup(groups[index].id)
+                                        groupIds.add(groups[index].id)
                                     }
                                 }
+                                learnerViewModel.selectAllGroups(groupIds)
                             }
                             groupList.replaceAll { false }
                             selectionMode = false
