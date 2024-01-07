@@ -87,7 +87,7 @@ fun GroupList(navController: NavController) {
 
     val highlightGroups = mutableListOf<Int>()
     if (selectedGroups.isNotEmpty()) {
-        if (selectedGroups.size == groups.size) {
+        if (selectedGroups.size == groups.size && groups.size > 1) {
             highlightGroups.add(0)
         } else {
             selectedGroups.forEach {
