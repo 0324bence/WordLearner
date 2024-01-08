@@ -23,6 +23,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.data.entities.Setting
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 
@@ -44,6 +47,8 @@ fun Settings() {
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
+
+    val settings by learnerViewModel.currentSettings.collectAsState(initial = Setting())
 
     Scaffold(
         topBar = {
@@ -66,9 +71,9 @@ fun Settings() {
                     headlineContent = { Text(text = stringResource(id = R.string.darkmode)) },
                     trailingContent = {
                         Switch(
-                            checked = if (learnerViewModel.useSystemTheme) isSystemInDarkTheme() else learnerViewModel.darkmode,
+                            checked = if (settings.useSystemTheme) isSystemInDarkTheme() else settings.darkMode,
                             onCheckedChange = {learnerViewModel.changeDarkMode(it)},
-                            enabled = !learnerViewModel.useSystemTheme
+                            enabled = !settings.useSystemTheme
                         )
                     }
                 )
@@ -79,7 +84,7 @@ fun Settings() {
                     headlineContent = { Text(text = stringResource(id = R.string.system_theme)) },
                     trailingContent = {
                         Switch(
-                            checked = learnerViewModel.useSystemTheme,
+                            checked = settings.useSystemTheme,
                             onCheckedChange = {learnerViewModel.changeUseSystemTheme(it)}
                         )
                     }
@@ -92,7 +97,7 @@ fun Settings() {
                     supportingContent = { Text(text = stringResource(id = R.string.deck_info)) },
                     trailingContent = {
                         Switch(
-                            checked = learnerViewModel.usePlaySet,
+                            checked = settings.usePlayset,
                             onCheckedChange = {learnerViewModel.changeUsePlaySet(it)}
                         )
                     }
@@ -104,10 +109,10 @@ fun Settings() {
                     headlineContent = { Text(text = stringResource(id = R.string.positive_priority)) },
                     trailingContent = {
                         OutlinedTextField(
-                            value = learnerViewModel.positivePriorityMod,
+                            value = settings.negativePriorityMod,
                             onValueChange = {
                                 if (it.length < 3 && it.isDigitsOnly())
-                                    learnerViewModel.changePositivePriorityMod(it)
+                                    learnerViewModel.changeNegativePriorityMod(it)
                             },
                             singleLine = true,
                             modifier = Modifier.width(60.dp),
@@ -117,7 +122,7 @@ fun Settings() {
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
-                            isError = learnerViewModel.positivePriorityMod.isEmpty()
+                            isError = settings.negativePriorityMod.isEmpty()
                         )
                     }
                 )
@@ -128,10 +133,10 @@ fun Settings() {
                     headlineContent = { Text(text = stringResource(id = R.string.negative_priority)) },
                     trailingContent = {
                         OutlinedTextField(
-                            value = learnerViewModel.negativePriorityMod,
+                            value = settings.positivePriorityMod,
                             onValueChange = {
                                 if (it.length < 3 && it.isDigitsOnly()) {
-                                    learnerViewModel.changeNegativePriorityMod(it)
+                                    learnerViewModel.changePositivePriorityMod(it)
                                 }
                             },
                             singleLine = true,
@@ -142,7 +147,7 @@ fun Settings() {
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
-                            isError = learnerViewModel.negativePriorityMod.isEmpty()
+                            isError = settings.positivePriorityMod.isEmpty()
                         )
                     }
                 )

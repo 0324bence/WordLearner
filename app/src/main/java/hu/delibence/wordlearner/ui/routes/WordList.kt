@@ -54,7 +54,6 @@ import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
 import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.Word
-import hu.delibence.wordlearner.onTouchHeld
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import kotlinx.coroutines.flow.Flow

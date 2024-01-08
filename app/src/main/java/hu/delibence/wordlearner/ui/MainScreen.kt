@@ -104,13 +104,15 @@ fun MainScreen() {
                 }
             ) {
                 learnerViewModel.routes.forEach { entry ->
+                    composable(route = "settings") {
+                        Settings()
+                    }
                     if (entry.key != "wordlist") {
                         composable(route = entry.key) {
     //                        Text(navController.currentDestination?.route ?: "No route")
                             when (entry.key) {
                                 "learn" -> Learn()
-                                "importexport" -> ImportExport()
-                                "settings" -> Settings()
+                                "importexport" -> ImportExport(navController)
                                 else -> {
                                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                         Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)

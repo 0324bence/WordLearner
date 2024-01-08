@@ -58,6 +58,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.delibence.wordlearner.R
 import hu.delibence.wordlearner.data.daos.wordCount
+import hu.delibence.wordlearner.data.entities.Setting
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import hu.delibence.wordlearner.ui.theme.Green
@@ -87,14 +88,18 @@ fun Learn() {
     val cardOffsetXTransition by updateTransition(targetState = cardOffsetX, label = "").animateFloat(label = "") { it }
     val cardRotationTransition by updateTransition(targetState = cardRotation, label = "").animateFloat(label = "") { it }
 
+    val settings by learnerViewModel.currentSettings.collectAsState(initial = Setting())
+
     fun nextWord(know: Boolean) {
         Log.d("Debug Log", "Next word")
         if (currentWord == null) return
         if (know) {
-            learnerViewModel.updateWordPriority(currentWord.id, 10)
-            learnerViewModel.removeFromPlay(currentWord.id)
+            learnerViewModel.updateWordPriority(currentWord.id, settings.negativePriorityMod.toInt())
+            if (settings.usePlayset) {
+                learnerViewModel.removeFromPlay(currentWord.id)
+            }
         } else {
-            learnerViewModel.updateWordPriority(currentWord.id, 10 * -1)
+            learnerViewModel.updateWordPriority(currentWord.id, settings.positivePriorityMod.toInt() * -1)
         }
         cardOffsetX = 0f
         cardRotation = 0f
@@ -107,22 +112,24 @@ fun Learn() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-                actions = {
-                    IconButton(onClick = {
-                        learnerViewModel.restoreAllToPlay()
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
+            if (settings.usePlayset) {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+                    actions = {
+                        IconButton(onClick = {
+                            learnerViewModel.restoreAllToPlay()
+                        }) {
+                            Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
+                        }
+                    },
+                    title = {
+                        Text(text = stringResource(id = R.string.learn_words, "${allWordCount.inplay}/${allWordCount.all}"))
                     }
-                },
-                title = {
-                    Text(text = stringResource(id = R.string.learn_words, "${allWordCount.inplay}/${allWordCount.all}"))
-                }
-            )
+                )
+            }
         }
     ) {pad ->
         Row(
@@ -165,7 +172,9 @@ fun Learn() {
                                 cardRotation = if (it > 0.5f) 3f else if (it < -0.5f) -3f else 0f
                             },
                             onDragStopped = {
-                                if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(false)
+                                if (cardOffsetX > 100f) nextWord(true) else if (cardOffsetX < -100f) nextWord(
+                                    false
+                                )
                                 cardOffsetX = 0f
                                 cardRotation = 0f
                             }
