@@ -28,4 +28,6 @@
     <string name="edit_group">Csoport módosítása</string>
     <string name="edit_word">Szó módosítása a %1$s csoportban</string>
     <string name="word_priority">Szó prioritása</string>
+    <string name="export">Exportálás</string>
+    <string name="import_">Importálás</string>
 </resources>

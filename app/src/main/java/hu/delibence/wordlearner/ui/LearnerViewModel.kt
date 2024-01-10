@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.ImportExport
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SyncAlt
@@ -50,7 +51,7 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         "learn" to Route(R.string.nav_learn, Icons.Outlined.Language),
         "wordlist" to Route(R.string.nav_wordlist, Icons.Outlined.Folder),
         //"settings" to Route(R.string.settings, Icons.Outlined.Settings),
-        "importexport" to Route(R.string.nav_importexport, Icons.Outlined.SyncAlt)
+        "importexport" to Route(R.string.nav_importexport, Icons.Outlined.ImportExport)
     )
     val baseRoute = "learn"
 

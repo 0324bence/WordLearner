@@ -28,4 +28,6 @@
     <string name="edit_group">Edit group</string>
     <string name="edit_word">Edit word in group: %1$s</string>
     <string name="word_priority">Word priority</string>
+    <string name="export">Export</string>
+    <string name="import_">Import</string>
 </resources>
