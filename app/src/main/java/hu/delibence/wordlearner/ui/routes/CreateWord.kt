@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +44,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -83,7 +86,7 @@ fun CreateWord(navController: NavController, groupId: Int?) {
     var lang1 by remember { mutableStateOf("") }
     var lang2 by remember { mutableStateOf("") }
 
-    var expanded by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
     val focusManager = LocalFocusManager.current
     Scaffold(
@@ -113,7 +116,7 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                     value = lang1,
                     onValueChange = {lang1 = it},
                     label = { Text(text = stringResource(id = R.string.lang1)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
@@ -206,5 +209,9 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }

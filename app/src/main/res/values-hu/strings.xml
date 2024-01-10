@@ -25,4 +25,7 @@
     <string name="negative_priority">Prioritás változás nem tudott szó esetében (+)</string>
     <string name="use_deck">Pakli rendszer használata</string>
     <string name="deck_info">Tudott szavak eltávolítása a pakliból, újratöltésig</string>
+    <string name="edit_group">Csoport módosítása</string>
+    <string name="edit_word">Szó módosítása a %1$s csoportban</string>
+    <string name="word_priority">Szó prioritása</string>
 </resources>

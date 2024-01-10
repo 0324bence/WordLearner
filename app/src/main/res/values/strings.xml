@@ -25,4 +25,7 @@
     <string name="negative_priority">Priority change when word wasn\'t known (+)</string>
     <string name="use_deck">Use shrinking playset</string>
     <string name="deck_info">Removes known words from playset until reset</string>
+    <string name="edit_group">Edit group</string>
+    <string name="edit_word">Edit word in group: %1$s</string>
+    <string name="word_priority">Word priority</string>
 </resources>

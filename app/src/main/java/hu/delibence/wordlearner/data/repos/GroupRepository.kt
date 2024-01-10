@@ -11,6 +11,8 @@ class GroupRepository(private val groupDao: GroupDao) {
 
     suspend fun DeleteGroup(groupId: partialGroup) = groupDao.Delete(groupId)
 
+    suspend fun UpdateGroup(group: Group) = groupDao.Update(group)
+
     fun GetAllGroups(): Flow<List<extendedGroup>> = groupDao.getAll()
 
     fun getSpecificGroup(groupId: Int): Flow<Group> = groupDao.getSpecific(groupId)

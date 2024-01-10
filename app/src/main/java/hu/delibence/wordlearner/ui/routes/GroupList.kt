@@ -137,7 +137,8 @@ fun GroupList(navController: NavController) {
                         }
                         IconButton(
                             onClick = {
-                                /*TODO selected*/
+                                val groupId = groups[groupList.slice(1..<groupList.size).indexOf(true)].id
+                                navController.navigate("editgroup/${groupId}")
                             },
                             enabled = !groupList[0] && (groupList.count { it } == 1)
                         ) {

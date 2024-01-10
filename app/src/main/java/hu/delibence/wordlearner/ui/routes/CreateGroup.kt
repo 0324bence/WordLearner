@@ -27,11 +27,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -51,6 +54,8 @@ fun CreateGroup(navController: NavController) {
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
     )
+
+    val focusRequester = remember { FocusRequester() }
 
     var groupName by remember { mutableStateOf("") }
     Scaffold(
@@ -80,7 +85,7 @@ fun CreateGroup(navController: NavController) {
                     value = groupName,
                     onValueChange = {groupName = it},
                     label = { Text(text = stringResource(id = R.string.group_name)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
                     ),
@@ -105,5 +110,9 @@ fun CreateGroup(navController: NavController) {
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.Word
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,8 @@ interface WordDao {
     @Delete(entity = Word::class)
     suspend fun Delete(wordId: partialWord)
 
+    @Update
+    suspend fun Update(word: Word)
 
     @Query("Delete from words where `group` = :groupId")
     suspend fun deleteAllInGroup(groupId: Int)
@@ -29,6 +32,9 @@ interface WordDao {
 
     @Query("SELECT * FROM (SELECT * FROM words join selectedwords on selectedwords.`group` = words.`group` where inplay = 1 ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
     fun getByPriority(): Flow<Word>
+
+    @Query("Select * from words where id = :wordId Limit 1")
+    fun getSpecificWord(wordId: Int): Flow<Word>
 
     //@Query("SELECT * FROM (SELECT * FROM word ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
     @Query("SELECT * FROM (SELECT * FROM words where inplay = 1 ORDER BY priority  DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")

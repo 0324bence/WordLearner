@@ -48,6 +48,8 @@ import androidx.navigation.navArgument
 import hu.delibence.wordlearner.R
 import hu.delibence.wordlearner.ui.routes.CreateGroup
 import hu.delibence.wordlearner.ui.routes.CreateWord
+import hu.delibence.wordlearner.ui.routes.EditGroup
+import hu.delibence.wordlearner.ui.routes.EditWord
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportExport
 import hu.delibence.wordlearner.ui.routes.Learn
@@ -143,6 +145,27 @@ fun MainScreen() {
                                 )
                             ) {navBackStackEntry ->
                                 CreateWord(navController, navBackStackEntry.arguments?.getInt("groupId"))
+                            }
+                            composable(
+                                route = "editgroup/{groupId}",
+                                arguments = listOf(
+                                    navArgument("groupId") {type = NavType.IntType}
+                                )
+                            ) {navBackStackEntry ->
+                                EditGroup(navController, navBackStackEntry.arguments?.getInt("groupId"))
+                            }
+                            composable(
+                                route = "editword/{groupId}/{wordId}",
+                                arguments = listOf(
+                                    navArgument("groupId") {type = NavType.IntType},
+                                    navArgument("wordId") {type = NavType.IntType}
+                                )
+                            ) {navBackStackEntry ->
+                                EditWord(
+                                    navController,
+                                    navBackStackEntry.arguments?.getInt("groupId"),
+                                    navBackStackEntry.arguments?.getInt("wordId")
+                                )
                             }
                         }
                     }

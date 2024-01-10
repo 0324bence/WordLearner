@@ -181,29 +181,13 @@ fun WordList(navController: NavController, groupId: Int?) {
                             }
                         },
                         modifier = Modifier
-//                            .clickable {
-////                            navController.navigate("words")
-//                                if (selectionMode) {
-//                                    wordList[index] = !wordList[index]
-//                                    if (!wordList.any { item -> item }) selectionMode = false
-//                                } else {
-//                                    Log.d("Wordlist", "clicked")
-//                                }
-//                            }
-//                            .onTouchHeld(500.milliseconds) { dur ->
-//                                if (dur > 1.seconds && dur < 2.seconds) {
-////                                    Log.d("Wordlist", "Held down")
-//                                    selectionMode = true
-//                                    wordList[index] = true
-//                                }
-//                            }
                             .combinedClickable(
                                 onClick = {
                                     if (selectionMode) {
                                         wordList[index] = !wordList[index]
                                         if (!wordList.any { item -> item }) selectionMode = false
                                     } else {
-                                        Log.d("Wordlist", "clicked")
+                                        navController.navigate("editword/${groupId}/${words[index].id}")
                                     }
                                 },
                                 onLongClick = {

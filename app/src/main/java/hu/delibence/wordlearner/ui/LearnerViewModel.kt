@@ -54,11 +54,6 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
     )
     val baseRoute = "learn"
 
-    var darkmode by mutableStateOf(true)
-    var useSystemTheme by mutableStateOf(true)
-    var usePlaySet by mutableStateOf(true)
-    var positivePriorityMod by mutableStateOf("5")
-    var negativePriorityMod by mutableStateOf("1")
 
     private val groupRepository: GroupRepository
     private val wordRepository: WordRepository
@@ -102,39 +97,46 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun updateWord(word: Word) {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.UpdateWord(word)
+        }
+    }
+
+    fun updateGroup(group: Group) {
+        viewModelScope.launch (Dispatchers.IO) {
+            groupRepository.UpdateGroup(group)
+        }
+    }
+
     fun changeDarkMode(value: Boolean) {
         viewModelScope.launch (Dispatchers.IO) {
             settingRepository.updateDarkMode(value)
         }
-        darkmode = value
     }
 
     fun changeUseSystemTheme(value: Boolean) {
         viewModelScope.launch (Dispatchers.IO) {
             settingRepository.updateSystemTheme(value)
         }
-        useSystemTheme = value
     }
 
     fun changeNegativePriorityMod(value: String) {
         viewModelScope.launch (Dispatchers.IO) {
             settingRepository.updateNegativePriorityMod(value)
         }
-        negativePriorityMod = value
     }
 
     fun changePositivePriorityMod(value: String) {
         viewModelScope.launch (Dispatchers.IO) {
             settingRepository.updatePositivePriorityMod(value)
         }
-        positivePriorityMod = value
     }
 
     fun changeUsePlaySet(value: Boolean) {
         viewModelScope.launch (Dispatchers.IO) {
             settingRepository.updateUsePlayset(value)
         }
-        usePlaySet = value
     }
 
     fun removeFromPlay(wordId: Int) {
@@ -213,6 +215,10 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
 
     private fun getRandomWordByPriority(): Flow<Word> {
         return wordRepository.GetByPriority()
+    }
+
+    fun getSpecificWord(wordId: Int): Flow<Word> {
+        return wordRepository.GetSpecificWord(wordId)
     }
 
     fun updateWordPriority(wordId: Int, amount: Int) {

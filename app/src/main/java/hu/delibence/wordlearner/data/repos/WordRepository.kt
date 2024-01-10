@@ -14,11 +14,15 @@ class WordRepository(private val wordDao: WordDao) {
 
     suspend fun DeleteAllWordsInGroup(groupId: Int) = wordDao.deleteAllInGroup(groupId)
 
+    suspend fun UpdateWord(word: Word) = wordDao.Update(word)
+
     fun GetAllWords(): Flow<List<extendedWord>> = wordDao.getAll()
 
     fun GetAllInGroup(groupId: Int): Flow<List<extendedWord>> = wordDao.getAllInGroup(groupId)
 
     fun GetByPriority() = wordDao.getByPriority()
+
+    fun GetSpecificWord(wordId: Int) = wordDao.getSpecificWord(wordId)
 
     fun GetAllByPriority() = wordDao.getAllByPriority()
 
