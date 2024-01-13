@@ -50,6 +50,7 @@ import hu.delibence.wordlearner.ui.routes.CreateGroup
 import hu.delibence.wordlearner.ui.routes.CreateWord
 import hu.delibence.wordlearner.ui.routes.EditGroup
 import hu.delibence.wordlearner.ui.routes.EditWord
+import hu.delibence.wordlearner.ui.routes.ExportCsv
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportExport
 import hu.delibence.wordlearner.ui.routes.Learn
@@ -109,21 +110,18 @@ fun MainScreen() {
                     composable(route = "settings") {
                         Settings()
                     }
-                    if (entry.key != "wordlist") {
-                        composable(route = entry.key) {
-    //                        Text(navController.currentDestination?.route ?: "No route")
-                            when (entry.key) {
-                                "learn" -> Learn()
-                                "importexport" -> ImportExport(navController)
-                                else -> {
-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                        Text(text = stringResource(id = R.string.nav_error), style = MaterialTheme.typography.headlineLarge)
-                                    }
-                                }
-                            }
+                    composable("learn") {
+                        Learn()
+                    }
+                    navigation(startDestination = "lists", route = "importexport") {
+                        composable("lists") {
+                            ImportExport(navController = navController)
                         }
-                    } else {
-                        navigation(startDestination = "groups", route = "wordlist") {
+                        composable("exportcsv") {
+                            ExportCsv(navController = navController)
+                        }
+                    }
+                    navigation(startDestination = "groups", route = "wordlist") {
                             composable("groups") {
                                 GroupList(navController = navController)
                             }
@@ -168,7 +166,7 @@ fun MainScreen() {
                                 )
                             }
                         }
-                    }
+
                 }
             }
         }

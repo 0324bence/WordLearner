@@ -30,4 +30,8 @@
     <string name="word_priority">Word priority</string>
     <string name="export">Export</string>
     <string name="import_">Import</string>
+    <string name="export_csv">Export to .csv file</string>
+    <string name="no_export">Nothing to export</string>
+    <string name="group_to_export">Group to export</string>
+    <string name="delete_group">Delete group</string>
 </resources>

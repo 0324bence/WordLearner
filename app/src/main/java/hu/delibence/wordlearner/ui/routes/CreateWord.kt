@@ -148,49 +148,6 @@ fun CreateWord(navController: NavController, groupId: Int?) {
                     ),
                     singleLine = true
                 )
-                /*Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.TopStart)
-                ) {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Edit") },
-                            onClick = { *//* Handle edit! *//* },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Edit,
-                                    contentDescription = null
-                                )
-                            })
-                        DropdownMenuItem(
-                            text = { Text("Settings") },
-                            onClick = { *//* Handle settings! *//* },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Settings,
-                                    contentDescription = null
-                                )
-                            })
-                        HorizontalDivider()
-                        DropdownMenuItem(
-                            text = { Text("Send Feedback") },
-                            onClick = { *//* Handle send feedback! *//* },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Email,
-                                    contentDescription = null
-                                )
-                            },
-                            trailingIcon = { Text("F11", textAlign = TextAlign.Center) })
-                    }
-                }*/
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()

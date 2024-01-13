@@ -2,6 +2,7 @@ package hu.delibence.wordlearner.ui
 
 import android.app.Application
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.ImportExport
@@ -46,6 +47,8 @@ data class Route(
 class LearnerViewModel(application: Application) : AndroidViewModel(application) {
 //    private val _uiState = MutableStateFlow(LearnerUiState())
 //    val uiState: StateFlow<LearnerUiState> = _uiState.asStateFlow()
+
+    val importExportUiState = ImportExportUiState()
 
     val routes = mapOf<String, Route>(
         "learn" to Route(R.string.nav_learn, Icons.Outlined.Language),

@@ -1,6 +1,8 @@
 package hu.delibence.wordlearner.ui.routes
 
+import android.app.Application
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,17 +35,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
+import hu.delibence.wordlearner.ui.LearnerViewModel
+import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ImportExport(navController: NavController) {
+    val context = LocalContext.current
+    val learnerViewModel: LearnerViewModel = viewModel(
+        factory = LearnerViewModelFactory(context.applicationContext as Application)
+    )
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,29 +74,27 @@ fun ImportExport(navController: NavController) {
             )
         }
     ) {pad ->
-        val titles = listOf(R.string.import_, R.string.export)
-        var tabState by remember { mutableIntStateOf(0) }
-        val pagerState = rememberPagerState { titles.size }
+        val pagerState = rememberPagerState(initialPage = learnerViewModel.importExportUiState.tabState) { learnerViewModel.importExportUiState.titles.size }
 
-        LaunchedEffect(tabState) {
-            pagerState.animateScrollToPage(tabState)
+        LaunchedEffect(learnerViewModel.importExportUiState.tabState) {
+            pagerState.animateScrollToPage(learnerViewModel.importExportUiState.tabState)
         }
         LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-//            if (!pagerState.isScrollInProgress) {
-                tabState = pagerState.currentPage
-//            }
+            if (!pagerState.isScrollInProgress) {
+                learnerViewModel.importExportUiState.tabState = pagerState.currentPage
+            }
         }
 
         Column(modifier = Modifier.padding(pad)) {
             PrimaryTabRow(
-                selectedTabIndex = tabState,
+                selectedTabIndex = learnerViewModel.importExportUiState.tabState,
                 containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                 contentColor = MaterialTheme.colorScheme.primary
             ) {
-                titles.forEachIndexed { index, title ->
+                learnerViewModel.importExportUiState.titles.forEachIndexed { index, title ->
                     Tab(
-                        selected = tabState == index,
-                        onClick = { tabState = index },
+                        selected = learnerViewModel.importExportUiState.tabState == index,
+                        onClick = { learnerViewModel.importExportUiState.tabState = index },
                         text = { Text(text = stringResource(title), maxLines = 2, overflow = TextOverflow.Ellipsis) },
                         selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -100,14 +108,18 @@ fun ImportExport(navController: NavController) {
                             ListItem(
                                 headlineContent = { Text(text = "Import from file") },
                                 supportingContent = { Text(text = ".csv")},
-                                trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null) }
+                                trailingContent = {
+                                    Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
+                                }
                             )
                             HorizontalDivider()
                         }
                         item {
                             ListItem(
                                 headlineContent = { Text(text = "Import from text") },
-                                trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null) }
+                                trailingContent = {
+                                    Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
+                                }
                             )
                             HorizontalDivider()
                         }
@@ -116,7 +128,13 @@ fun ImportExport(navController: NavController) {
                             ListItem(
                                 headlineContent = { Text(text = "Export to text file") },
                                 supportingContent = { Text(text = ".csv")},
-                                trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null) }
+                                trailingContent = {
+                                    Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
+                                                  },
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate("exportcsv")
+                                    }
                             )
                             HorizontalDivider()
                         }
@@ -124,14 +142,18 @@ fun ImportExport(navController: NavController) {
                             ListItem(
                                 headlineContent = { Text(text = "Export to PDF file") },
                                 supportingContent = { Text(text = ".pdf")},
-                                trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null) }
+                                trailingContent = {
+                                    Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
+                                }
                             )
                             HorizontalDivider()
                         }
                         item {
                             ListItem(
                                 headlineContent = { Text(text = "Share export") },
-                                trailingContent = { Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null) }
+                                trailingContent = {
+                                    Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
+                                }
                             )
                             HorizontalDivider()
                         }
