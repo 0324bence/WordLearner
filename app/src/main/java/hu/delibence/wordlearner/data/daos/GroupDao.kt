@@ -25,6 +25,9 @@ interface GroupDao {
 
     @Query("Select * from groups where id = :groupId  Order By name ASC Limit 1")
     fun getSpecific(groupId: Int): Flow<Group>
+
+    @Query("Select * from groups where name = :name order by id Desc limit 1")
+    fun getSpecificByName(name: String): Flow<Group>
 }
 
 data class partialGroup(val id: Int)

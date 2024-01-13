@@ -2,7 +2,6 @@ package hu.delibence.wordlearner.ui.routes
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,17 +43,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hu.delibence.wordlearner.R
-import hu.delibence.wordlearner.data.daos.extendedWord
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +80,7 @@ fun ExportCsv(navController: NavController) {
     }
     val outputLines = viewModelOtuputLines
 
-    val test = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) {
+    val createCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) {
 //        Log.d("outputLog", "Create contract callback")
         if (it == null) {
             return@rememberLauncherForActivityResult
@@ -208,7 +201,7 @@ fun ExportCsv(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Button(onClick = {
-                        test.launch("${groups[selectedGroup].name}_export.csv")
+                        createCsv.launch("${groups[selectedGroup].name}_export.csv")
                     }) {
                         Text(text = stringResource(id = R.string.export))
                     }

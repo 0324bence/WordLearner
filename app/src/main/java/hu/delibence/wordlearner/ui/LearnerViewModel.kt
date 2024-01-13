@@ -185,6 +185,12 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun createAllWords(words: List<Word>) {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.CreateAllWords(words)
+        }
+    }
+
     fun deleteWord(wordId: Int) {
         viewModelScope.launch (Dispatchers.IO) {
             wordRepository.DeleteWord(wordId)
@@ -215,6 +221,10 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
 
     fun getOneGroup(groupId: Int): Flow<Group> {
         return groupRepository.getSpecificGroup(groupId)
+    }
+
+    fun getOneGroupByName(name: String): Flow<Group> {
+        return groupRepository.getSpecificGroupByName(name)
     }
 
     private fun getRandomWordByPriority(): Flow<Word> {

@@ -110,7 +110,11 @@ fun ImportExport(navController: NavController) {
                                 supportingContent = { Text(text = ".csv")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
-                                }
+                                },
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate("importcsv")
+                                    }
                             )
                             HorizontalDivider()
                         }
@@ -130,7 +134,7 @@ fun ImportExport(navController: NavController) {
                                 supportingContent = { Text(text = ".csv")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
-                                                  },
+                                },
                                 modifier = Modifier
                                     .clickable {
                                         navController.navigate("exportcsv")

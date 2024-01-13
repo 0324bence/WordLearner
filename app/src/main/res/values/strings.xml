@@ -34,4 +34,5 @@
     <string name="no_export">Nothing to export</string>
     <string name="group_to_export">Group to export</string>
     <string name="delete_group">Delete group</string>
+    <string name="file_to_load">File to load</string>
 </resources>

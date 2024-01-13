@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.Flow
 class WordRepository(private val wordDao: WordDao) {
     suspend fun CreateWord(word: Word) = wordDao.Create(word)
 
+    suspend fun CreateAllWords(words: List<Word>) = wordDao.CreateAll(words)
+
     suspend fun DeleteWord(wordId: Int) = wordDao.Delete(partialWord(wordId))
 
     suspend fun DeleteAllWordsInGroup(groupId: Int) = wordDao.deleteAllInGroup(groupId)

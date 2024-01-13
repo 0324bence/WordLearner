@@ -15,6 +15,9 @@ interface WordDao {
     @Insert
     suspend fun Create(word: Word)
 
+    @Insert
+    suspend fun CreateAll(words: List<Word>)
+
     @Delete(entity = Word::class)
     suspend fun Delete(wordId: partialWord)
 
