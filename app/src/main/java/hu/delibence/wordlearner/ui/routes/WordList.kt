@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowLeft
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +30,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -46,6 +49,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -128,9 +133,21 @@ fun WordList(navController: NavController, groupId: Int?) {
                         IconButton(onClick = {
                             wordList.forEachIndexed { i, v ->
                                 if (v) {
+                                    learnerViewModel.flagWord(words[i].id, !words[i].flagged)
+                                }
+                            }
+                            wordList.replaceAll { false }
+                            selectionMode = false
+                        }) {
+                            Icon(imageVector = Icons.Outlined.Flag, contentDescription = "Select all")
+                        }
+                        IconButton(onClick = {
+                            wordList.forEachIndexed { i, v ->
+                                if (v) {
                                     learnerViewModel.deleteWord(words[i].id)
                                 }
                             }
+                            wordList.replaceAll { false }
                             selectionMode = false
                         }) {
                             Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete selected")
@@ -155,6 +172,9 @@ fun WordList(navController: NavController, groupId: Int?) {
                 itemsIndexed(words) { index, wordItem ->
 
                     ListItem(
+                        colors = ListItemDefaults.colors(
+                                containerColor = if (wordItem.flagged) Color(0x22ff0000) else ListItemDefaults.colors().containerColor
+                        ),
                         headlineContent = { Text(text = wordItem.word1) },
                         supportingContent = { Text(text = wordItem.word2) },
                         trailingContent = {

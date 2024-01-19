@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Flag
@@ -264,8 +265,11 @@ fun Learn() {
                                     ) {
                                         Icon(imageVector = Icons.Outlined.Close, contentDescription = "Delete fab button")
                                     }
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(imageVector = Icons.Outlined.Flag, contentDescription = "Flag icon")
+                                    IconButton(onClick = { learnerViewModel.flagWord(currentWord.id, true) }) {
+                                        Icon(
+                                            imageVector = if (!currentWord.flagged) Icons.Outlined.Flag else Icons.Filled.Flag,
+                                            contentDescription = "Flag icon"
+                                        )
                                     }
                                     FloatingActionButton(
                                         onClick = { nextWord(true) },

@@ -240,6 +240,12 @@ class LearnerViewModel(application: Application) : AndroidViewModel(application)
             wordRepository.UpdatePriority(wordId, amount)
         }
     }
+
+    fun flagWord(wordId: Int, value: Boolean) {
+        viewModelScope.launch (Dispatchers.IO) {
+            wordRepository.FlagWord(wordId, value)
+        }
+    }
 }
 
 class LearnerViewModelFactory(

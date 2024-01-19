@@ -53,10 +53,10 @@ interface WordDao {
     suspend fun restoreAllToPlay()
 
     @Query("UPDATE words SET priority = (priority - :amount) WHERE id = :wordId")
-    fun updatePriority(wordId: Int, amount: Int)
+    suspend fun updatePriority(wordId: Int, amount: Int)
 
     @Query("UPDATE words SET flagged = :value WHERE id = :wordId")
-    fun flag(wordId: Int, value: Boolean)
+    suspend fun flag(wordId: Int, value: Boolean)
 }
 data class partialWord(val id: Int)
 

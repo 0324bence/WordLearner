@@ -34,5 +34,7 @@ class WordRepository(private val wordDao: WordDao) {
 
     suspend fun RestoreAllToPlay() = wordDao.restoreAllToPlay()
 
-    fun UpdatePriority(wordId: Int, amount: Int) = wordDao.updatePriority(wordId, amount)
+    suspend fun UpdatePriority(wordId: Int, amount: Int) = wordDao.updatePriority(wordId, amount)
+
+    suspend fun FlagWord(wordId: Int, value: Boolean) = wordDao.flag(wordId, value)
 }
