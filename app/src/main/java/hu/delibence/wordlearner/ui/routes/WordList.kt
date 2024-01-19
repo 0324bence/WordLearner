@@ -86,7 +86,7 @@ fun WordList(navController: NavController, groupId: Int?) {
 
     val words by learnerViewModel.getWordsInGroup(groupId).collectAsState(initial = listOf())
     if (words.size != wordList.size) {
-        if (wordList.size > 0) wordList.removeRange(0, wordList.size-1)
+        if (wordList.size > 0) wordList.clear()
         words.forEach { _ ->
             wordList.add(false)
         }

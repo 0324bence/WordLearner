@@ -75,13 +75,16 @@ fun GroupList(navController: NavController) {
     val selectedGroups by learnerViewModel.selectedGroups.collectAsState(initial = listOf())
 
     if ((groups.size + 1) != groupList.size) {
+        Log.d("DebugLog", "grouplist " + groupList.size.toString() + " " + groups.size)
         if (groupList.size > 1) {
-            groupList.removeRange(1, groupList.size-1)
+            Log.d("DebugLog", "remove all items")
+            groupList.clear()
             groupList.add(false)
         }
         groups.forEach { _ ->
             groupList.add(false)
         }
+        Log.d("DebugLog", "end grouplist " + groupList.size.toString())
     }
 
     val highlightGroups = mutableListOf<Int>()
@@ -151,6 +154,7 @@ fun GroupList(navController: NavController) {
                                         learnerViewModel.deleteGroup(groups[i].id)
                                     }
                                 }
+                                groupList.replaceAll { false }
                                 selectionMode = false
                             },
                             enabled = !groupList[0]
