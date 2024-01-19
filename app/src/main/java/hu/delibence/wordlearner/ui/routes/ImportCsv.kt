@@ -122,6 +122,9 @@ fun ImportCsv(navController: NavController) {
         ) {
             val defaultColors = TextFieldDefaults.colors()
 
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+                Text(text = stringResource(id = R.string.file_format), style = MaterialTheme.typography.titleMedium)
+            }
             OutlinedTextField(
                 value = selectedFileName,
                 onValueChange = {},
@@ -140,7 +143,7 @@ fun ImportCsv(navController: NavController) {
                     .fillMaxWidth()
                     .clickable {
                         Log.d("outputLog", "clicked box")
-                        readCsv.launch(arrayOf("text/comma-separated-values"))
+                        readCsv.launch(arrayOf("text/comma-separated-values", "text/csv", "text/.csv"))
                     }
             )
             OutlinedTextField(
@@ -165,13 +168,15 @@ fun ImportCsv(navController: NavController) {
                             val words = mutableListOf<Word>()
                             for (line in lines) {
                                 val data = line.split(",")
-                                words.add(
-                                    Word(
-                                        word1 = data[0],
-                                        word2 = data[1],
-                                        group = group.id
+                                if (data.size == 2) {
+                                    words.add(
+                                        Word(
+                                            word1 = data[0],
+                                            word2 = data[1],
+                                            group = group.id
+                                        )
                                     )
-                                )
+                                }
                             }
                             learnerViewModel.createAllWords(words)
 

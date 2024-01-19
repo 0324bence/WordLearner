@@ -35,4 +35,5 @@
     <string name="group_to_export">Exportálni való csoport</string>
     <string name="delete_group">Csoport törlése</string>
     <string name="file_to_load">Betöltendő file</string>
+    <string name="file_format">File formátum:\nszó1,szó2\nszó1,szó2</string>
 </resources>
