@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
@@ -29,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -50,6 +53,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -77,6 +82,7 @@ fun ImportCsv(navController: NavController) {
     var selectedFile by remember { mutableStateOf("") }
     var selectedFileName by remember { mutableStateOf("") }
     var groupName by remember { mutableStateOf("") }
+    var fileDelimiter by remember { mutableStateOf(",") }
 
     val readCsv = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){
         if (it == null) {
@@ -123,7 +129,7 @@ fun ImportCsv(navController: NavController) {
             val defaultColors = TextFieldDefaults.colors()
 
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-                Text(text = stringResource(id = R.string.file_format), style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(id = R.string.file_format, fileDelimiter), style = MaterialTheme.typography.titleMedium)
             }
             OutlinedTextField(
                 value = selectedFileName,
@@ -143,8 +149,21 @@ fun ImportCsv(navController: NavController) {
                     .fillMaxWidth()
                     .clickable {
                         Log.d("outputLog", "clicked box")
-                        readCsv.launch(arrayOf("text/comma-separated-values", "text/csv", "text/.csv"))
+                        readCsv.launch(
+                            arrayOf(
+                                "text/comma-separated-values",
+                                "text/csv",
+                                "text/.csv"
+                            )
+                        )
                     }
+            )
+            OutlinedTextField(
+                value = fileDelimiter,
+                onValueChange = {fileDelimiter = it},
+                label = {Text(stringResource(id = R.string.delimiter))},
+                modifier = Modifier.fillMaxWidth(),
+                isError = fileDelimiter.isEmpty()
             )
             OutlinedTextField(
                 value = groupName,
@@ -157,6 +176,7 @@ fun ImportCsv(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = {
+                    if (fileDelimiter.isEmpty()) return@Button
                     learnerViewModel.createGroup(Group(name = groupName))
                     learnerViewModel.viewModelScope.launch (Dispatchers.IO) {
                         val group = learnerViewModel.getOneGroupByName(groupName).first()
@@ -167,7 +187,7 @@ fun ImportCsv(navController: NavController) {
                             val lines = reader.readLines()
                             val words = mutableListOf<Word>()
                             for (line in lines) {
-                                val data = line.split(",")
+                                val data = line.split(fileDelimiter)
                                 if (data.size == 2) {
                                     words.add(
                                         Word(

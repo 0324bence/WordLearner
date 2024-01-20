@@ -35,5 +35,10 @@
     <string name="group_to_export">Group to export</string>
     <string name="delete_group">Delete group</string>
     <string name="file_to_load">File to load</string>
-    <string name="file_format">File format:\nword1,word2\nword1,word2</string>
+    <string name="file_format">File format:\nword1%1$sword2\nword1%1$sword2</string>
+    <string name="delimiter">Column delimiter</string>
+    <string name="line_error">Not all lines in the file were correct. Would you still like to import the correct lines?</string>
+    <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
