@@ -41,4 +41,5 @@
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="export_share">Share exported text</string>
 </resources>

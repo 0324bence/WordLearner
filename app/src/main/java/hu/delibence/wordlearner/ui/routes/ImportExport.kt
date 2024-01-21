@@ -157,7 +157,11 @@ fun ImportExport(navController: NavController) {
                                 headlineContent = { Text(text = "Share export") },
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
-                                }
+                                },
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate("exportshare")
+                                    }
                             )
                             HorizontalDivider()
                         }
