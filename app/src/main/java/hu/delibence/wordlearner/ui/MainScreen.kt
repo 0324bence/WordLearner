@@ -55,6 +55,7 @@ import hu.delibence.wordlearner.ui.routes.ExportShare
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportCsv
 import hu.delibence.wordlearner.ui.routes.ImportExport
+import hu.delibence.wordlearner.ui.routes.ImportText
 import hu.delibence.wordlearner.ui.routes.Learn
 import hu.delibence.wordlearner.ui.routes.Settings
 import hu.delibence.wordlearner.ui.routes.WordList
@@ -127,6 +128,9 @@ fun MainScreen() {
                         }
                         composable("importcsv") {
                             ImportCsv(navController = navController)
+                        }
+                        composable("importtext") {
+                            ImportText(navController = navController)
                         }
                     }
                     navigation(startDestination = "groups", route = "wordlist") {

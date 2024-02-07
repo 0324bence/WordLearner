@@ -42,4 +42,10 @@
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <string name="export_share">Exportált szöveg megosztása</string>
+    <string name="import_csv">.csv fájlból importálás</string>
+    <string name="import_text">Szövegből importálás</string>
+    <string name="import_file">Fájlból importálás</string>
+    <string name="export_textfile">Szöveges fájlba exportálás</string>
+    <string name="export_pdf">PDF-be exportálás</string>
+    <string name="text">Szöveg</string>
 </resources>

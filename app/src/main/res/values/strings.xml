@@ -42,4 +42,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="export_share">Share exported text</string>
+    <string name="import_csv">Import from .csv file</string>
+    <string name="import_text">Import from text</string>
+    <string name="import_file">Import from file</string>
+    <string name="export_textfile">Export to text file</string>
+    <string name="export_pdf">Export to PDF</string>
+    <string name="text">Text</string>
 </resources>

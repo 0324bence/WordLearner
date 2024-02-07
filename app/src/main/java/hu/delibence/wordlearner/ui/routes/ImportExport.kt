@@ -106,7 +106,7 @@ fun ImportExport(navController: NavController) {
                     if (page == 0) {
                         item {
                             ListItem(
-                                headlineContent = { Text(text = "Import from file") },
+                                headlineContent = { Text(text = stringResource(R.string.import_file)) },
                                 supportingContent = { Text(text = ".csv")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
@@ -120,17 +120,21 @@ fun ImportExport(navController: NavController) {
                         }
                         item {
                             ListItem(
-                                headlineContent = { Text(text = "Import from text") },
+                                headlineContent = { Text(text = stringResource(id = R.string.import_text)) },
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
-                                }
+                                },
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate("importtext")
+                                    }
                             )
                             HorizontalDivider()
                         }
                     } else {
                         item {
                             ListItem(
-                                headlineContent = { Text(text = "Export to text file") },
+                                headlineContent = { Text(text = stringResource(id = R.string.export_textfile)) },
                                 supportingContent = { Text(text = ".csv")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
@@ -144,7 +148,7 @@ fun ImportExport(navController: NavController) {
                         }
                         item {
                             ListItem(
-                                headlineContent = { Text(text = "Export to PDF file") },
+                                headlineContent = { Text(text = stringResource(id = R.string.export_pdf)) },
                                 supportingContent = { Text(text = ".pdf")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
@@ -154,7 +158,7 @@ fun ImportExport(navController: NavController) {
                         }
                         item {
                             ListItem(
-                                headlineContent = { Text(text = "Share export") },
+                                headlineContent = { Text(text = stringResource(id = R.string.export_share)) },
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
                                 },

@@ -23,7 +23,9 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.SwapVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -91,6 +93,8 @@ fun Learn() {
 
     val settings by learnerViewModel.currentSettings.collectAsState(initial = Setting())
 
+    var useMainLanguage by remember { mutableStateOf(true) }
+
     fun nextWord(know: Boolean) {
         Log.d("Debug Log", "Next word")
         if (currentWord == null) return
@@ -120,6 +124,11 @@ fun Learn() {
                         titleContentColor = MaterialTheme.colorScheme.onSurface,
                     ),
                     actions = {
+                        IconButton(onClick = {
+                            useMainLanguage = !useMainLanguage
+                        }) {
+                            Icon(imageVector = Icons.Outlined.SwapVert, contentDescription = "")
+                        }
                         IconButton(onClick = {
                             learnerViewModel.restoreAllToPlay()
                         }) {
@@ -210,7 +219,7 @@ fun Learn() {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                                         Text(
                                             /*if (settings.langToLearn == LanguageToLearn.Lang1) currentWord.lang2 else currentWord.lang1,*/
-                                            currentWord.word1,
+                                            if (useMainLanguage) currentWord.word1 else currentWord.word2,
                                             style = MaterialTheme.typography.headlineLarge,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.Center
@@ -233,7 +242,10 @@ fun Learn() {
                                     .weight(weight = 3f, fill = true), verticalArrangement = Arrangement.Center) {
                                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                                         Text(
-                                            text = if (wordRevealed) currentWord.word2 else "***",
+                                            text =
+                                            if (wordRevealed) {
+                                                if (useMainLanguage) currentWord.word2 else currentWord.word1
+                                            } else "***",
                                             style = MaterialTheme.typography.headlineLarge,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.Center
