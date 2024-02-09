@@ -152,7 +152,11 @@ fun ImportExport(navController: NavController) {
                                 supportingContent = { Text(text = ".pdf")},
                                 trailingContent = {
                                     Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowRight, contentDescription = null)
-                                }
+                                },
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate("exportpdf")
+                                    }
                             )
                             HorizontalDivider()
                         }

@@ -51,6 +51,7 @@ import hu.delibence.wordlearner.ui.routes.CreateWord
 import hu.delibence.wordlearner.ui.routes.EditGroup
 import hu.delibence.wordlearner.ui.routes.EditWord
 import hu.delibence.wordlearner.ui.routes.ExportCsv
+import hu.delibence.wordlearner.ui.routes.ExportPDF
 import hu.delibence.wordlearner.ui.routes.ExportShare
 import hu.delibence.wordlearner.ui.routes.GroupList
 import hu.delibence.wordlearner.ui.routes.ImportCsv
@@ -131,6 +132,9 @@ fun MainScreen() {
                         }
                         composable("importtext") {
                             ImportText(navController = navController)
+                        }
+                        composable("exportpdf") {
+                            ExportPDF(navController = navController)
                         }
                     }
                     navigation(startDestination = "groups", route = "wordlist") {

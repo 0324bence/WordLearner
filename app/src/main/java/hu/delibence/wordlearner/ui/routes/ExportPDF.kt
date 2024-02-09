@@ -2,6 +2,7 @@ package hu.delibence.wordlearner.ui.routes
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.graphics.pdf.PdfDocument
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -42,19 +43,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.itextpdf.text.Document
+import com.itextpdf.text.ListItem
+import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfWriter
 import hu.delibence.wordlearner.R
 import hu.delibence.wordlearner.ui.LearnerViewModel
 import hu.delibence.wordlearner.ui.LearnerViewModelFactory
 import kotlinx.coroutines.flow.map
 
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun ExportCsv(navController: NavController) {
-
+fun ExportPDF(navController: NavController) {
     val context = LocalContext.current
     val learnerViewModel: LearnerViewModel = viewModel(
         factory = LearnerViewModelFactory(context.applicationContext as Application)
@@ -70,42 +75,36 @@ fun ExportCsv(navController: NavController) {
 
     val viewModelOutputLines by if (groups.isNotEmpty() && groups.size-1 >= selectedGroup) {
         learnerViewModel.getWordsInGroup(groups[selectedGroup].id).map { words ->
-        val outputList = mutableListOf<String>()
-        words.forEach {word ->
-            outputList.add("${word.word1},${word.word2}")
-        }
-        return@map outputList
-    }.collectAsState(initial = null) } else {
+            val outputList = mutableListOf<String>()
+            words.forEach {word ->
+                outputList.add("${word.word1} - ${word.word2}")
+            }
+            return@map outputList
+        }.collectAsState(initial = null) } else {
         mutableStateOf(null)
     }
     val outputLines = viewModelOutputLines
 
-    val createCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) {
+    val createCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) {
 //        Log.d("outputLog", "Create contract callback")
         if (it == null) {
             return@rememberLauncherForActivityResult
         }
-//        Log.d("outputLog", it.toString())
+
         val fileOutputStream = context.contentResolver.openOutputStream(it) ?: return@rememberLauncherForActivityResult
         //learnerViewModel.viewModelScope.launch {
-//            Log.d("outputLog", "launching coroutine")
-            val writer = fileOutputStream.writer()
-
-//            Log.d("outputLog", "start appending lines")
-
+            var outputText = ""
             outputLines?.forEach {words ->
-//                Log.d("outputLog", "appending line")
-                writer.appendLine(words)
+                outputText += words + "\n"
             }
+            val doc = Document()
+            PdfWriter.getInstance(doc, fileOutputStream)
+            doc.open()
+            val paragraph = Paragraph(outputText)
+            paragraph.font.size = 18f
+            doc.add(paragraph)
+            doc.close()
 
-            writer.close()
-            fileOutputStream.close()
-
-            if (deleteGroup) {
-                learnerViewModel.deleteGroup(groups[selectedGroup].id)
-            }
-
-            navController.popBackStack()
         //}
     }
 
@@ -136,7 +135,7 @@ fun ExportCsv(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             if (groups.isEmpty()) {
-                Row( modifier = Modifier.fillMaxWidth(),
+                Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
@@ -201,7 +200,7 @@ fun ExportCsv(navController: NavController) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Button(onClick = {
-                        createCsv.launch("${groups[selectedGroup].name}_export.csv")
+                        createCsv.launch("${groups[selectedGroup].name}_export.pdf")
                     }) {
                         Text(text = stringResource(id = R.string.export))
                     }
