@@ -5,10 +5,11 @@ plugins {
 }
 
 
-
 android {
     namespace = "hu.delibence.wordlearner"
     compileSdk = 34
+
+
 
     defaultConfig {
         applicationId = "hu.delibence.wordlearner"
@@ -22,9 +23,16 @@ android {
             useSupportLibrary = true
         }
         javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-            }
+//            annotationProcessorOptions {
+//                arguments["room.schemaLocation"] = "$projectDir/schemas"
+//            }
+//            annotationProcessorOptions {
+//                arguments["room.schemaLocation"] = "$projectDir/schemas"
+//            }
+        }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 

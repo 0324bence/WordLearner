@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
 import hu.delibence.wordlearner.data.entities.Group
 import hu.delibence.wordlearner.data.entities.Word
@@ -34,6 +35,7 @@ interface WordDao {
     fun getAllInGroup(groupId: Int): Flow<List<extendedWord>>
 
     @Query("SELECT * FROM (SELECT * FROM words join selectedwords on selectedwords.`group` = words.`group` where inplay = 1 ORDER BY priority DESC LIMIT 3) ORDER BY RANDOM() LIMIT 1")
+    @RewriteQueriesToDropUnusedColumns
     fun getByPriority(): Flow<Word>
 
     @Query("Select * from words where id = :wordId Limit 1")

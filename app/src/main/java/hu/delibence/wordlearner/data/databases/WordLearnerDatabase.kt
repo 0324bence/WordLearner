@@ -16,8 +16,11 @@ import hu.delibence.wordlearner.data.entities.Word
 
 @Database(
     entities = [Group::class, Word::class, SelectedGroup::class, Setting::class],
-    version = 2,
-    exportSchema = false
+    version = 1,
+    exportSchema = true,
+    autoMigrations = [
+        //AutoMigration(from = 1, to = 2)
+    ]
 )
 abstract class WordLearnerDatabase : RoomDatabase() {
     abstract fun groupDao(): GroupDao
