@@ -1,0 +1,5 @@
+Hu:
+Az alkalmazás semmi féle adatot nem küld sehova. Minden feltöltött adat a mobilon tárolt.
+
+En:
+The app doesn't send any data to anywhere. All uploaded data is stored on-device.
