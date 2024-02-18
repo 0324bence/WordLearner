@@ -169,14 +169,15 @@ fun ImportCsv(navController: NavController) {
                 value = groupName,
                 onValueChange = {groupName = it},
                 label = {Text(stringResource(id = R.string.group_name))},
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = groupName.isEmpty()
             )
             Row(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = {
-                    if (fileDelimiter.isEmpty()) return@Button
+                    if (fileDelimiter.isEmpty() || groupName.isEmpty() || selectedFile.isEmpty()) return@Button
                     learnerViewModel.createGroup(Group(name = groupName))
                     learnerViewModel.viewModelScope.launch (Dispatchers.IO) {
                         val group = learnerViewModel.getOneGroupByName(groupName).first()
