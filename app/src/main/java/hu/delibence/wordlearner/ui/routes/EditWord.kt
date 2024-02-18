@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -131,7 +132,8 @@ fun EditWord(navController: NavController, groupId: Int?, wordId: Int?) {
                                 focusManager.moveFocus(FocusDirection.Down)
                             }
                         ),
-                        singleLine = true
+                        singleLine = true,
+                        isError = lang1.isEmpty()
                     )
                     OutlinedTextField(
                         value = lang2,
@@ -152,29 +154,47 @@ fun EditWord(navController: NavController, groupId: Int?, wordId: Int?) {
                                 navController.popBackStack()
                             }
                         ),
-                        singleLine = true
+                        singleLine = true,
+                        isError = lang2.isEmpty()
                     )
                     OutlinedTextField(
                         value = priority,
-                        onValueChange = {priority = it},
+                        onValueChange = {
+                            if (it.isEmpty() || it == "-") {
+                                priority = it
+                                return@OutlinedTextField
+                            }
+                            val num = it.toIntOrNull()
+                            if (num != null) {
+                                priority = it
+                            }
+                        },
                         label = { Text(text = stringResource(id = R.string.word_priority)) },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
+                                if (priority.toIntOrNull() == null || lang1.isEmpty() || lang2.isEmpty()) {
+                                    return@KeyboardActions
+                                }
                                 learnerViewModel.updateWord(Word(word1 = lang1, word2 = lang2, group = groupId, priority = priority.toInt(), id = wordId))
                                 navController.popBackStack()
                             }
                         ),
-                        singleLine = true
+                        singleLine = true,
+                        isError = priority.toIntOrNull() == null
                     )
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(onClick = {
+                            if (priority.toIntOrNull() == null || lang1.isEmpty() || lang2.isEmpty()) {
+                                return@Button
+                            }
                             learnerViewModel.updateWord(Word(word1 = lang1, word2 = lang2, group = groupId, priority = priority.toInt(), id = wordId))
                             navController.popBackStack()
                         }) {
