@@ -117,7 +117,7 @@ fun Learn() {
 
     Scaffold(
         topBar = {
-            if (settings.usePlayset) {
+            //if (settings.usePlayset) {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2f.dp),
@@ -129,17 +129,23 @@ fun Learn() {
                         }) {
                             Icon(imageVector = Icons.Outlined.SwapVert, contentDescription = "")
                         }
-                        IconButton(onClick = {
-                            learnerViewModel.restoreAllToPlay()
-                        }) {
-                            Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
+                        if (settings.usePlayset) {
+                            IconButton(onClick = {
+                                learnerViewModel.restoreAllToPlay()
+                            }) {
+                                Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
+                            }
                         }
                     },
                     title = {
-                        Text(text = stringResource(id = R.string.learn_words, "${allWordCount.inplay}/${allWordCount.all}"))
+                        if (settings.usePlayset) {
+                            Text(text = stringResource(id = R.string.learn_words, "${allWordCount.inplay}/${allWordCount.all}"))
+                        } else {
+                            Text(text = stringResource(id = R.string.nav_learn))
+                        }
                     }
                 )
-            }
+            //}
         }
     ) {pad ->
         Row(
